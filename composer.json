@@ -1,7 +1,7 @@
 {
-    "name": "laravel/lumen",
-    "description": "The Laravel Lumen Framework.",
-    "keywords": ["framework", "laravel", "lumen"],
+    "name": "underdogs-app-api",
+    "description": "Underdogs APP RESTful API",
+    "keywords": ["api", "api restful", "lumen"],
     "license": "MIT",
     "type": "project",
     "require": {
