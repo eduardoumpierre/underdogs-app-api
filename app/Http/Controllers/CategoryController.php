@@ -15,11 +15,11 @@ class CategoryController extends Controller
 
     /**
      * CategoryController constructor.
-     * @param CategoryRepository $pr
+     * @param CategoryRepository $cr
      */
-    public function __construct(CategoryRepository $pr)
+    public function __construct(CategoryRepository $cr)
     {
-        $this->categoryRepository = $pr;
+        $this->categoryRepository = $cr;
     }
 
     /**
