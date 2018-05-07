@@ -31,4 +31,14 @@ class Product extends Model
     {
         return $this->hasOne('App\Category', 'id', 'categories_id');
     }
+
+    /**
+     * Get the ingredients list associated with the product.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function ingredients()
+    {
+        return $this->belongsToMany('App\ProductIngredient', 'products_ingredients', 'products_id');
+    }
 }

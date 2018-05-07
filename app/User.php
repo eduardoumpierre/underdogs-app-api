@@ -18,7 +18,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      * @var array
      */
     protected $fillable = [
-        'name', 'username', 'email', 'password', 'experience'
+        'name', 'username', 'email', 'password', 'experience', 'levels_id'
     ];
 
     /**
@@ -27,6 +27,24 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      * @var array
      */
     protected $hidden = [
-        'created_at', 'updated_at', 'password',
+        'created_at', 'updated_at', 'password', 'levels_id'
     ];
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function level()
+    {
+        return $this->hasOne('App\Level', 'id', 'levels_id');
+    }
+
+    /**
+     * Get the badges list associated with the user.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function badges()
+    {
+        return $this->belongsToMany('App\UserBadge', 'users_badges', 'users_id');
+    }
 }

@@ -23,4 +23,14 @@ class Badge extends Model
     protected $hidden = [
         'created_at', 'updated_at'
     ];
+
+    /**
+     * Get the users list associated with the badge.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function users()
+    {
+        return $this->belongsToMany('App\UserBadge', 'users_badges', 'badges_id');
+    }
 }

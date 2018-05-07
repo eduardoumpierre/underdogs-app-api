@@ -49,12 +49,15 @@ $factory->define(App\ProductIngredient::class, function (Faker\Generator $faker)
 
 
 $factory->define(App\User::class, function (Faker\Generator $faker) {
+    $number = $faker->numberBetween(150,2000);
+
     return [
         'name' => $faker->name,
         'username' => $faker->userName,
         'email' => $faker->email,
         'password' => app('hash')->make('123'),
-        'experience' => $faker->numberBetween(0,2000)
+        'experience' => $number,
+        'levels_id' => DB::table('levels')->where('experience', '<=', $number)->orderByDesc('id')->first()->id
     ];
 });
 
@@ -64,3 +67,11 @@ $factory->define(App\UserBadge::class, function (Faker\Generator $faker) {
         'badges_id' => DB::table('badges')->pluck('id')->random()
     ];
 });
+
+$factory->define(App\Level::class, function (Faker\Generator $faker) {
+    return [
+        'number' => $faker->unique()->numberBetween(0, 100000),
+        'experience' => $faker->unique()->numberBetween(0, 100000)
+    ];
+});
+
