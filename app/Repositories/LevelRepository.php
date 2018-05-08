@@ -61,6 +61,7 @@ class LevelRepository implements LevelInterface
     /**
      * @param int $id
      * @return null
+     * @throws \Exception
      */
     public function delete(int $id)
     {
@@ -70,13 +71,33 @@ class LevelRepository implements LevelInterface
     }
 
     /**
+     * Returns the next level by id
+     *
      * @param int $id
      * @return Model
      */
-    public function findNextLevelById(int $id)
+    public function findNextLevelById(int $id): Model
     {
         $level = $this->findOneById($id);
 
         return $this->findOneByNumber($level->number + 1);
+    }
+
+    /**
+     * Returns the upgraded levels
+     *
+     * @param int $experience
+     * @param int $currentLevel
+     * @return Collection
+     */
+    public function findNextLevelsByExperience(int $experience, int $currentLevel): Collection
+    {
+        $levels = Level::query()
+            ->where('experience', '<=', $experience)
+            ->where('id', '>', $currentLevel)
+            ->orderBy('number')
+            ->get();
+
+        return $levels;
     }
 }

@@ -68,6 +68,7 @@ class UserRepository implements UserInterface
     /**
      * @param int $id
      * @return null
+     * @throws \Exception
      */
     public function delete(int $id)
     {
@@ -77,34 +78,41 @@ class UserRepository implements UserInterface
     }
 
     /**
+     * Adds experience to user
+     *
      * @param int $id
      * @param int $experience
      * @return Collection|Model
      */
     public function addExperience(int $id, int $experience)
     {
-        $user = $this->findOneById($id, ['id', 'experience']);
+        $user = $this->findOneById($id, ['id', 'experience', 'levels_id']);
         $user->experience += $experience;
+        $user->levels_id = $this->updateUserLevel($user->experience, $user->levels_id);
         $user->update();
-
-        $this->updateUserLevel($id);
 
         return $user;
     }
 
     /**
-     * @param int $id
+     * Returns the new user level
+     *
+     * @param int $experience
+     * @param int $currentLevel
+     * @return int|mixed
      */
-    private function updateUserLevel(int $id)
+    private function updateUserLevel(int $experience, int $currentLevel)
     {
-        $user = $this->findOneById($id, ['id', 'experience', 'levels_id']);
-        $nextLevel = $this->levelRepository->findNextLevelById($user->levels_id);
+        $levels = $this->levelRepository->findNextLevelsByExperience($experience, $currentLevel);
 
-        if ($user->experience >= $nextLevel->experience) {
-            $user->levels_id = $nextLevel->id;
-            $user->update();
+        if (count($levels) > 0) {
+            foreach ($levels as $key => $val) {
+                // Adds record to history
+            }
+
+            return $levels->last()->id;
         }
 
-        return;
+        return $currentLevel;
     }
 }

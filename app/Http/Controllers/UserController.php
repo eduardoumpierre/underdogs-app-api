@@ -41,7 +41,8 @@ class UserController extends Controller
 
     /**
      * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
+     * @throws \Illuminate\Validation\ValidationException
      */
     public function create(Request $request): JsonResponse
     {
@@ -60,6 +61,7 @@ class UserController extends Controller
      * @param Request $request
      * @param int $id
      * @return JsonResponse
+     * @throws \Illuminate\Validation\ValidationException
      */
     public function update(Request $request, int $id): JsonResponse
     {
@@ -77,6 +79,7 @@ class UserController extends Controller
     /**
      * @param int $id
      * @return JsonResponse
+     * @throws \Exception
      */
     public function delete(int $id): JsonResponse
     {
