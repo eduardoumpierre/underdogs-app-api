@@ -41,10 +41,10 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     /**
      * Get the badges list associated with the user.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function badges()
     {
-        return $this->belongsToMany('App\UserBadge', 'users_badges', 'users_id');
+        return $this->hasMany('App\UserBadge', 'users_id', 'id');
     }
 }
