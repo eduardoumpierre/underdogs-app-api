@@ -35,10 +35,10 @@ class Product extends Model
     /**
      * Get the ingredients list associated with the product.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function ingredients()
     {
-        return $this->belongsToMany('App\ProductIngredient', 'products_ingredients', 'products_id');
+        return $this->hasMany('App\ProductIngredient', 'products_id', 'id');
     }
 }
