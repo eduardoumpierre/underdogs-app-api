@@ -23,7 +23,7 @@ class ProductRepository implements ProductInterface
      */
     public function findOneById(int $id): Model
     {
-        return Product::query()->findOrFail($id);
+        return Product::query()->with('ingredients.ingredient:id,name,allergenic')->findOrFail($id);
     }
 
     /**
