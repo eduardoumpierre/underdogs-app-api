@@ -73,4 +73,29 @@ $router->group(['prefix' => 'api/v1', 'middleware' => []], function () use ($rou
         $router->put('/{id}', 'UserController@update');
         $router->delete('/{id}', 'UserController@delete');
     });
+
+    /**
+     * Bills
+     */
+    $router->group(['prefix' => 'bills'], function () use ($router) {
+        $router->get('/', 'BillController@getAll');
+        $router->get('/{id}', 'BillController@getOne');
+        $router->post('/', 'BillController@create');
+        $router->put('/{id}', 'BillController@update');
+        $router->delete('/{id}', 'BillController@delete');
+
+        $router->post('/products', 'BillController@addProduct');
+        $router->post('/payment', 'BillController@payBill');
+    });
+
+    /**
+     * Cards
+     */
+    $router->group(['prefix' => 'cards'], function () use ($router) {
+        $router->get('/', 'CardController@getAll');
+        $router->get('/{id}', 'CardController@getOne');
+        $router->post('/', 'CardController@create');
+        $router->put('/{id}', 'CardController@update');
+        $router->delete('/{id}', 'CardController@delete');
+    });
 });
