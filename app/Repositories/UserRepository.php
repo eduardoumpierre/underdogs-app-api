@@ -10,14 +10,17 @@ use Illuminate\Database\Eloquent\Model;
 class UserRepository implements UserInterface
 {
     private $levelRepository;
+    private $userDropRepository;
 
     /**
      * UserRepository constructor.
      * @param LevelRepository $lr
+     * @param UserDropRepository $udr
      */
-    public function __construct(LevelRepository $lr)
+    public function __construct(LevelRepository $lr, UserDropRepository $udr)
     {
         $this->levelRepository = $lr;
+        $this->userDropRepository = $udr;
     }
 
 
@@ -87,8 +90,8 @@ class UserRepository implements UserInterface
     public function addExperience(int $id, int $experience)
     {
         $user = $this->findOneById($id, ['id', 'experience', 'levels_id']);
+        $user->levels_id = $this->updateUserLevel($user->id, $user->levels_id, $user->experience, $experience);
         $user->experience += $experience;
-        $user->levels_id = $this->updateUserLevel($user->experience, $user->levels_id);
         $user->update();
 
         return $user;
@@ -97,17 +100,22 @@ class UserRepository implements UserInterface
     /**
      * Returns the new user level
      *
-     * @param int $experience
+     * @param int $userId
      * @param int $currentLevel
-     * @return int|mixed
+     * @param int $currentExperience
+     * @param int $newExperience
+     * @return int
      */
-    private function updateUserLevel(int $experience, int $currentLevel)
+    private function updateUserLevel(int $userId, int $currentLevel, int $currentExperience, int $newExperience)
     {
-        $levels = $this->levelRepository->findNextLevelsByExperience($experience, $currentLevel);
+        $levels = $this->levelRepository->findNextLevelsByExperience($currentLevel, $currentExperience, $newExperience);
 
         if (count($levels) > 0) {
             foreach ($levels as $key => $val) {
-                // Adds record to history
+                // @todo Adds record to history
+
+                // Adds a new drop from level's drops
+                $this->userDropRepository->create(['user' => $userId, 'level' => $val['number']]);
             }
 
             return $levels->last()->id;
