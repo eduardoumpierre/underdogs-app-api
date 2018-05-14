@@ -86,14 +86,16 @@ class LevelRepository implements LevelInterface
     /**
      * Returns the upgraded levels
      *
-     * @param int $experience
      * @param int $currentLevel
+     * @param int $currentExperience
+     * @param int $newExperience
      * @return Collection
      */
-    public function findNextLevelsByExperience(int $experience, int $currentLevel): Collection
+    public function findNextLevelsByExperience(int $currentLevel, int $currentExperience, int $newExperience): Collection
     {
         $levels = Level::query()
-            ->where('experience', '<=', $experience)
+            ->where('experience', '>=', $currentExperience)
+            ->where('experience', '<=', $currentExperience + $newExperience)
             ->where('id', '>', $currentLevel)
             ->orderBy('number')
             ->get();
