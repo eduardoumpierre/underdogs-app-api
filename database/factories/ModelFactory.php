@@ -75,3 +75,21 @@ $factory->define(App\Level::class, function (Faker\Generator $faker) {
     ];
 });
 
+$factory->define(App\Card::class, function (Faker\Generator $faker) {
+    return [
+        'number' => $faker->unique()->numberBetween(10000, 99999)
+    ];
+});
+
+$factory->define(App\Drop::class, function (Faker\Generator $faker) {
+    return [
+        'description' => $faker->name
+    ];
+});
+
+$factory->define(App\LevelDrop::class, function (Faker\Generator $faker) {
+    return [
+        'levels_id' => $faker->randomNumber(),
+        'drops_id' => DB::table('drops')->pluck('id')->random()
+    ];
+});
