@@ -51,6 +51,7 @@ class BadgeRepository implements BadgeInterface
     /**
      * @param int $id
      * @return null
+     * @throws \Exception
      */
     public function delete(int $id)
     {
