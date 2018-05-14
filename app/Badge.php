@@ -25,12 +25,10 @@ class Badge extends Model
     ];
 
     /**
-     * Get the users list associated with the badge.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function users()
     {
-        return $this->belongsToMany('App\UserBadge', 'users_badges', 'badges_id');
+        return $this->hasMany('App\UserBadge', 'users_id', 'id');
     }
 }
