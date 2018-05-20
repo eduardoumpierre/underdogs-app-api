@@ -9,6 +9,18 @@ use Illuminate\Database\Eloquent\Model;
 
 class ProductRepository implements ProductInterface
 {
+    private $categoryRepository;
+
+    /**
+     * ProductRepository constructor.
+     * @param CategoryRepository $cr
+     */
+    public function __construct(CategoryRepository $cr)
+    {
+        $this->categoryRepository = $cr;
+    }
+
+
     /**
      * @return Collection
      */
@@ -51,6 +63,7 @@ class ProductRepository implements ProductInterface
     /**
      * @param int $id
      * @return null
+     * @throws \Exception
      */
     public function delete(int $id)
     {
@@ -59,4 +72,28 @@ class ProductRepository implements ProductInterface
         return null;
     }
 
+    /**
+     * @return array
+     */
+    public function findAllOrderedByCategory()
+    {
+        $categories = $this->categoryRepository->findAll();
+        $response = [];
+
+        foreach ($categories as $key => $val) {
+            $response[$key] = $val;
+            $response[$key]['list'] = $this->findAllByCategory($val['id']);
+        }
+
+        return $response;
+    }
+
+    /**
+     * @param int $id
+     * @return Collection|static[]
+     */
+    public function findAllByCategory(int $id)
+    {
+        return Product::query()->where('categories_id', '=', $id)->get();
+    }
 }

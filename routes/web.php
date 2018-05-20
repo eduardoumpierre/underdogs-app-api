@@ -23,7 +23,7 @@ $router->group(['prefix' => 'api/v1', 'middleware' => []], function () use ($rou
      * Products
      */
     $router->group(['prefix' => 'products'], function () use ($router) {
-        $router->get('/', 'ProductController@getAll');
+        $router->get('/', 'ProductController@getAllOrderedByCategory');
         $router->get('/{id}', 'ProductController@getOne');
         $router->post('/', 'ProductController@create');
         $router->put('/{id}', 'ProductController@update');

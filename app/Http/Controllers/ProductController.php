@@ -31,6 +31,14 @@ class ProductController extends Controller
     }
 
     /**
+     * @return array
+     */
+    public function getAllOrderedByCategory(): array
+    {
+        return $this->productRepository->findAllOrderedByCategory();
+    }
+
+    /**
      * @param int $id
      * @return Model
      */
@@ -41,7 +49,8 @@ class ProductController extends Controller
 
     /**
      * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
+     * @throws \Illuminate\Validation\ValidationException
      */
     public function create(Request $request): JsonResponse
     {
@@ -59,6 +68,7 @@ class ProductController extends Controller
      * @param Request $request
      * @param int $id
      * @return JsonResponse
+     * @throws \Illuminate\Validation\ValidationException
      */
     public function update(Request $request, int $id): JsonResponse
     {
@@ -75,6 +85,7 @@ class ProductController extends Controller
     /**
      * @param int $id
      * @return JsonResponse
+     * @throws \Exception
      */
     public function delete(int $id): JsonResponse
     {
