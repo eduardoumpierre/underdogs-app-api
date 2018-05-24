@@ -40,9 +40,9 @@ class BillController extends Controller
 
     /**
      * @param int $id
-     * @return Model
+     * @return Collection|Model|null|static|static[]
      */
-    public function getOne(int $id): Model
+    public function getOne(int $id)
     {
         if (true) {
             return $this->billRepository->findOneByIdWithProducts($id);

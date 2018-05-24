@@ -28,13 +28,15 @@ class BillRepository implements BillInterface
 
     /**
      * @param int $id
-     * @return Model
+     * @return Collection|Model|null|static|static[]
      */
-    public function findOneByIdWithProducts(int $id): Model
+    public function findOneByIdWithProducts(int $id)
     {
-        return Bill::with(['products', 'products.product:id,name,price'])
+        $bill = Bill::with(['products', 'products.product:id,name,price'])
             ->where('is_active', '=', 1)
-            ->findOrFail($id);
+            ->find($id);
+
+        return $bill ? $bill : [];
     }
 
     /**
