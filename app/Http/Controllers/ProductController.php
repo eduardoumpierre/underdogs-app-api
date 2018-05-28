@@ -23,10 +23,14 @@ class ProductController extends Controller
     }
 
     /**
-     * @return Collection
+     * @return array|Collection
      */
-    public function getAll(): Collection
+    public function getAll()
     {
+        if (true) {
+            return $this->getAllOrderedByCategory();
+        }
+
         return $this->productRepository->findAll();
     }
 
