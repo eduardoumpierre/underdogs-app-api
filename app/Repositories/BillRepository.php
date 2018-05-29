@@ -9,6 +9,17 @@ use Illuminate\Database\Eloquent\Model;
 
 class BillRepository implements BillInterface
 {
+    private $billProductRepository;
+
+    /**
+     * BillRepository constructor.
+     * @param BillProductRepository $bpr
+     */
+    public function __construct(BillProductRepository $bpr)
+    {
+        $this->billProductRepository = $bpr;
+    }
+
     /**
      * @return Collection
      */
@@ -32,9 +43,19 @@ class BillRepository implements BillInterface
      */
     public function findOneByIdWithProducts(int $id)
     {
-        $bill = Bill::with(['products', 'products.product:id,name,price'])
-            ->where('is_active', '=', 1)
-            ->find($id);
+        $bill = Bill::query()->where('is_active', '=', 1)->find($id);
+
+        if ($bill) {
+            $total = 0;
+            $products = $this->billProductRepository->findAllByBill($bill['id']);
+            $bill['products'] = $products;
+
+            foreach ($products as $key => $val) {
+                $total += $val['price'] * $val['quantity'];
+            }
+
+            $bill['total'] = $total;
+        }
 
         return $bill ? $bill : [];
     }

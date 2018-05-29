@@ -23,7 +23,7 @@ class BillProduct extends Model
      * @var array
      */
     protected $hidden = [
-        'id', 'created_at', 'updated_at', 'bills_id', 'products_id'
+        'created_at', 'updated_at', 'bills_id', 'products_id'
     ];
 
     /**
@@ -43,6 +43,6 @@ class BillProduct extends Model
      */
     public function product()
     {
-        return $this->hasOne('App\Product', 'id');
+        return $this->hasOne('App\Product', 'id', 'products_id');
     }
 }

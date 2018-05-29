@@ -6,6 +6,7 @@ use App\BillProduct;
 use App\Interfaces\BillProductInterface;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class BillProductRepository implements BillProductInterface
 {
@@ -60,4 +61,20 @@ class BillProductRepository implements BillProductInterface
         return null;
     }
 
+    /**
+     * @param int $id
+     * @return Collection|static[]
+     */
+    public function findAllByBill(int $id)
+    {
+        $query = BillProduct::query()
+            ->from('bills_products AS bp')
+            ->select(['p.id', 'p.name', 'p.price', DB::raw('COALESCE(COUNT(p.id), 0) as quantity')])
+            ->join('products AS p', 'p.id', '=', 'bp.products_id')
+            ->where('bp.bills_id', '=', $id)
+            ->groupBy('p.id')
+            ->get();
+
+        return $query;
+    }
 }
