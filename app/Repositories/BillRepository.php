@@ -25,7 +25,7 @@ class BillRepository implements BillInterface
      */
     public function findAll(): Collection
     {
-        return Bill::query()->get();
+        return Bill::query()->where('is_active', '=', 1)->get();
     }
 
     /**
