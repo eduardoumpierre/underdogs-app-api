@@ -25,7 +25,12 @@ class BillRepository implements BillInterface
      */
     public function findAll(): Collection
     {
-        return Bill::query()->where('is_active', '=', 1)->get();
+        return Bill::query()
+            ->from('bills AS b')
+            ->select('b.id', 'c.number', 'u.name')
+            ->join('cards AS c', 'c.id', '=', 'b.cards_id')
+            ->join('users AS u', 'u.id', '=', 'b.users_id')
+            ->where('is_active', '=', 1)->get();
     }
 
     /**
