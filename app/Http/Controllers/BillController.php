@@ -44,11 +44,7 @@ class BillController extends Controller
      */
     public function getOne(int $id)
     {
-        if (true) {
-            return $this->billRepository->findOneByIdWithProducts($id);
-        }
-
-        return $this->billRepository->findOneById($id);
+        return $this->billRepository->findOneByIdWithProducts($id);
     }
 
     /**
@@ -75,7 +71,8 @@ class BillController extends Controller
     public function update(Request $request, int $id): JsonResponse
     {
         $this->validate($request, [
-            'is_active' => 'required|boolean'
+            'users_id' => 'required|numeric',
+            'cards_id' => 'required|numeric'
         ]);
 
         return response()->json($this->billRepository->update($request->all(), $id));

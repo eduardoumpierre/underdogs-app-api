@@ -21,7 +21,7 @@ class Bill extends Model
      * @var array
      */
     protected $hidden = [
-        'created_at', 'updated_at'
+        'created_at', 'updated_at', 'users_id', 'cards_id'
     ];
 
     /**
@@ -31,7 +31,7 @@ class Bill extends Model
      */
     public function user()
     {
-        return $this->hasOne('App\User', 'users_id', 'id');
+        return $this->hasOne('App\User', 'id', 'users_id');
     }
 
     /**
@@ -41,7 +41,7 @@ class Bill extends Model
      */
     public function card()
     {
-        return $this->hasOne('App\Card', 'cards_id', 'id');
+        return $this->hasOne('App\Card', 'id', 'cards_id');
     }
 
     /**

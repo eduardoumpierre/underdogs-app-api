@@ -48,7 +48,9 @@ class BillRepository implements BillInterface
      */
     public function findOneByIdWithProducts(int $id)
     {
-        $bill = Bill::query()->where('is_active', '=', 1)->find($id);
+        $bill = Bill::query()
+            ->with(['card', 'user:id,name'])
+            ->find($id);
 
         if ($bill) {
             $total = 0;
