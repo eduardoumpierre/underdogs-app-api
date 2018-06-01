@@ -27,7 +27,7 @@ class ProductController extends Controller
      */
     public function getAll()
     {
-        if (true) {
+        if (false) {
             return $this->getAllOrderedByCategory();
         }
 
