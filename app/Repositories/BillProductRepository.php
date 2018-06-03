@@ -77,4 +77,16 @@ class BillProductRepository implements BillProductInterface
 
         return $query;
     }
+
+    /**
+     * @param int $id
+     * @param int $productId
+     * @return null
+     */
+    public function deleteAllProductsById(int $id, int $productId)
+    {
+        BillProduct::query()->where('bills_id', '=', $id)->where('products_id', '=', $productId)->delete();
+
+        return null;
+    }
 }

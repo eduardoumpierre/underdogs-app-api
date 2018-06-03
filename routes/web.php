@@ -85,6 +85,8 @@ $router->group(['prefix' => 'api/v1', 'middleware' => []], function () use ($rou
         $router->delete('/{id}', 'BillController@delete');
 
         $router->post('/products', 'BillController@addProduct');
+        $router->delete('/{id}/products/{productId}', 'BillController@deleteProduct');
+
         $router->post('/payment', 'BillController@payBill');
     });
 

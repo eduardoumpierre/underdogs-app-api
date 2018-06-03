@@ -104,6 +104,16 @@ class BillController extends Controller
     }
 
     /**
+     * @param int $id
+     * @param int $productId
+     * @return JsonResponse
+     */
+    public function deleteProduct(int $id, int $productId)
+    {
+        return response()->json($this->billProductRepository->deleteAllProductsById($id, $productId), Response::HTTP_NO_CONTENT);
+    }
+
+    /**
      * @param Request $request
      * @return Collection|Model
      */
