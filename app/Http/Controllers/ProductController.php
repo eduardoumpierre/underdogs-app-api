@@ -27,7 +27,8 @@ class ProductController extends Controller
      */
     public function getAll()
     {
-        if (false) {
+        // @todo Add role control
+        if (true) {
             return $this->getAllOrderedByCategory();
         }
 
