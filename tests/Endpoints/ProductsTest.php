@@ -21,7 +21,7 @@ class ProductsTest extends \TestCase
 
         $this->seeJsonStructure([
             '*' => [
-                'id', 'name', 'price', 'experience'
+                'id', 'name', 'list'
             ]
         ]);
     }
