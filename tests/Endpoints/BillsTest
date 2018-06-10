@@ -1,0 +1,99 @@
+<?php
+
+class BillsTest extends \TestCase
+{
+    const URL = '/api/v1/bills/';
+
+    /**
+     * Get all bills test
+     */
+    public function testGettingAllBills()
+    {
+        // Get all bills with the authenticated user
+        $this->get(BillsTest::URL);
+        $this->assertResponseOk();
+
+        $this->seeJsonStructure([
+            '*' => [
+                'id', 'name', 'number'
+            ]
+        ]);
+    }
+
+    /**
+     * Get one bill test
+     */
+    public function testGettingSpecificBill()
+    {
+        // Get one bill
+        $this->get(BillsTest::URL . '1');
+        $this->assertResponseStatus(200);
+
+        $this->seeJsonStructure([
+            'id', 'is_active', 'products', 'total', 'card', 'user'
+        ]);
+
+        // Accessing invalid bill should give 404
+        $this->get(BillsTest::URL . '123456789');
+        $this->assertResponseStatus(404);
+    }
+
+    /**
+     * Creating bill test
+     */
+    public function testCreatingBill()
+    {
+        // Valid request
+        $this->post(BillsTest::URL, [
+            'users_id' => 1,
+            'cards_id' => 1
+        ]);
+        $this->assertResponseStatus(201);
+
+        // Invalid request - required fields are missing
+        $this->post(BillsTest::URL, [
+            'users_id' => 1,
+        ]);
+        $this->assertResponseStatus(422);
+    }
+
+    /**
+     * Updating bill test
+     */
+    public function testUpdatingBill()
+    {
+        // Valid request
+        $this->put(BillsTest::URL . '1', [
+            'users_id' => 1,
+            'cards_id' => 1
+        ]);
+        $this->assertResponseStatus(200);
+
+        // Invalid request - required fields are missing
+        $this->put(BillsTest::URL . '1', [
+            'users_id' => 1,
+        ]);
+        $this->assertResponseStatus(422);
+
+        // Invalid request - bill do not exists
+        $this->put(BillsTest::URL . '4444', [
+            'users_id' => 1,
+            'cards_id' => 1
+        ]);
+        $this->assertResponseStatus(404);
+    }
+
+    /**
+     * Removing bill test
+     */
+    public function testRemovingBill()
+    {
+        // Valid request
+        $this->delete(BillsTest::URL . '1');
+        $this->assertResponseStatus(204);
+
+        // Invalid request - bill don't exists
+        $this->delete(BillsTest::URL . '4444');
+        $this->assertResponseStatus(404);
+    }
+}
