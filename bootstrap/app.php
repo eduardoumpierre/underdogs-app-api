@@ -96,6 +96,9 @@ $app->register(Barryvdh\Cors\ServiceProvider::class);
 */
 
 $app->configure('cors');
+$app->configure('database');
+$app->configure('cache');
+$app->configure('app');
 
 $app->router->group([
     'namespace' => 'App\Http\Controllers',
