@@ -40,7 +40,11 @@ class UserRepository implements UserInterface
     public function findOneById(int $id, array $columns = ['*']): Model
     {
         if (['*'] === $columns) {
-            return User::query()->with('level')->findOrFail($id, $columns);
+            $user = User::query()->findOrFail($id, $columns);
+            $user['current_level'] = $this->levelRepository->findOneById($user->levels_id);
+            $user['next_level'] = $this->levelRepository->findOneByNumber($user['current_level']['number'] + 1);
+
+            return $user;
         }
 
         return User::query()->findOrFail($id, $columns);
