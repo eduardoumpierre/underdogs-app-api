@@ -9,6 +9,14 @@ class BillsTest extends \TestCase
      */
     public function testGettingAllBills()
     {
+        // Request without authentication
+        $this->get(BillsTest::URL);
+        $this->assertResponseStatus(401);
+
+        // Authentication
+        $user = factory(\App\User::class)->create();
+        $this->actingAs($user);
+
         // Get all bills with the authenticated user
         $this->get(BillsTest::URL);
         $this->assertResponseOk();
@@ -25,6 +33,14 @@ class BillsTest extends \TestCase
      */
     public function testGettingSpecificBill()
     {
+        // Request without authentication
+        $this->get(BillsTest::URL . '1');
+        $this->assertResponseStatus(401);
+
+        // Authentication
+        $user = factory(\App\User::class)->create();
+        $this->actingAs($user);
+
         // Get one bill
         $this->get(BillsTest::URL . '1');
         $this->assertResponseStatus(200);
@@ -43,6 +59,17 @@ class BillsTest extends \TestCase
      */
     public function testCreatingBill()
     {
+        // Request without authentication
+        $this->post(BillsTest::URL, [
+            'users_id' => 1,
+            'cards_id' => 1
+        ]);
+        $this->assertResponseStatus(401);
+
+        // Authentication
+        $user = factory(\App\User::class)->create();
+        $this->actingAs($user);
+
         // Valid request
         $this->post(BillsTest::URL, [
             'users_id' => 1,
@@ -62,6 +89,17 @@ class BillsTest extends \TestCase
      */
     public function testUpdatingBill()
     {
+        // Request without authentication
+        $this->put(BillsTest::URL . '1', [
+            'users_id' => 1,
+            'cards_id' => 1
+        ]);
+        $this->assertResponseStatus(401);
+
+        // Authentication
+        $user = factory(\App\User::class)->create();
+        $this->actingAs($user);
+
         // Valid request
         $this->put(BillsTest::URL . '1', [
             'users_id' => 1,
@@ -88,6 +126,14 @@ class BillsTest extends \TestCase
      */
     public function testRemovingBill()
     {
+        // Request without authentication
+        $this->delete(BillsTest::URL . '1');
+        $this->assertResponseStatus(401);
+
+        // Authentication
+        $user = factory(\App\User::class)->create();
+        $this->actingAs($user);
+
         // Valid request
         $this->delete(BillsTest::URL . '1');
         $this->assertResponseStatus(204);

@@ -15,6 +15,14 @@ class CategoriesTest extends \TestCase
      */
     public function testGettingAllCategories()
     {
+        // Request without authentication
+        $this->get(CategoriesTest::URL);
+        $this->assertResponseStatus(401);
+
+        // Authentication
+        $user = factory(\App\User::class)->create();
+        $this->actingAs($user);
+
         // Get all categories with the authenticated user
         $this->get(CategoriesTest::URL);
         $this->assertResponseOk();
@@ -31,6 +39,14 @@ class CategoriesTest extends \TestCase
      */
     public function testGettingSpecificCategory()
     {
+        // Request without authentication
+        $this->get(CategoriesTest::URL . '1');
+        $this->assertResponseStatus(401);
+
+        // Authentication
+        $user = factory(\App\User::class)->create();
+        $this->actingAs($user);
+
         // Get one category
         $this->get(CategoriesTest::URL . '1');
         $this->assertResponseStatus(200);
@@ -49,6 +65,16 @@ class CategoriesTest extends \TestCase
      */
     public function testCreatingCategory()
     {
+        // Request without authentication
+        $this->post(CategoriesTest::URL, [
+            'name' => 'Category teste'
+        ]);
+        $this->assertResponseStatus(401);
+
+        // Authentication
+        $user = factory(\App\User::class)->create();
+        $this->actingAs($user);
+
         // Valid request
         $this->post(CategoriesTest::URL, [
             'name' => 'Category teste'
@@ -67,6 +93,16 @@ class CategoriesTest extends \TestCase
      */
     public function testUpdatingCategory()
     {
+        // Request without authentication
+        $this->put(CategoriesTest::URL . '1', [
+            'name' => 'Category teste'
+        ]);
+        $this->assertResponseStatus(401);
+
+        // Authentication
+        $user = factory(\App\User::class)->create();
+        $this->actingAs($user);
+
         // Valid request
         $this->put(CategoriesTest::URL . '1', [
             'name' => 'Category teste'
@@ -89,6 +125,14 @@ class CategoriesTest extends \TestCase
      */
     public function testRemovingCategory()
     {
+        // Request without authentication
+        $this->delete(CategoriesTest::URL . '1');
+        $this->assertResponseStatus(401);
+
+        // Authentication
+        $user = factory(\App\User::class)->create();
+        $this->actingAs($user);
+
         // Valid request
         $this->delete(CategoriesTest::URL . '1');
         $this->assertResponseStatus(204);

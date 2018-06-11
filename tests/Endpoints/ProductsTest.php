@@ -49,6 +49,19 @@ class ProductsTest extends \TestCase
      */
     public function testCreatingProduct()
     {
+        // Request without authentication
+        $this->post(ProductsTest::URL, [
+            'name' => 'Produto teste',
+            'price' => '19,90',
+            'experience' => '15',
+            'categories_id' => 1
+        ]);
+        $this->assertResponseStatus(401);
+
+        // Authentication
+        $user = factory(\App\User::class)->create();
+        $this->actingAs($user);
+
         // Valid request
         $this->post(ProductsTest::URL, [
             'name' => 'Produto teste',
@@ -70,6 +83,19 @@ class ProductsTest extends \TestCase
      */
     public function testUpdatingProduct()
     {
+        // Request without authentication
+        $this->put(ProductsTest::URL . '1', [
+            'name' => 'Produto teste',
+            'price' => '19,90',
+            'experience' => '15',
+            'categories_id' => 1
+        ]);
+        $this->assertResponseStatus(401);
+
+        // Authentication
+        $user = factory(\App\User::class)->create();
+        $this->actingAs($user);
+
         // Valid request
         $this->put(ProductsTest::URL . '1', [
             'name' => 'Produto teste',
@@ -100,6 +126,14 @@ class ProductsTest extends \TestCase
      */
     public function testRemovingProduct()
     {
+        // Request without authentication
+        $this->delete(ProductsTest::URL . '1');
+        $this->assertResponseStatus(401);
+
+        // Authentication
+        $user = factory(\App\User::class)->create();
+        $this->actingAs($user);
+
         // Valid request
         $this->delete(ProductsTest::URL . '1');
         $this->assertResponseStatus(204);

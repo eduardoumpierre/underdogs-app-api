@@ -15,6 +15,14 @@ class UsersTest extends \TestCase
      */
     public function testGettingAllUsers()
     {
+        // Request without authentication
+        $this->get(UsersTest::URL);
+        $this->assertResponseStatus(401);
+
+        // Authentication
+        $user = factory(\App\User::class)->create();
+        $this->actingAs($user);
+
         // Get all users with the authenticated user
         $this->get(UsersTest::URL);
         $this->assertResponseOk();
@@ -31,6 +39,14 @@ class UsersTest extends \TestCase
      */
     public function testGettingSpecificUser()
     {
+        // Request without authentication
+        $this->get(UsersTest::URL . '1');
+        $this->assertResponseStatus(401);
+
+        // Authentication
+        $user = factory(\App\User::class)->create();
+        $this->actingAs($user);
+
         // Get one user
         $this->get(UsersTest::URL . '1');
         $this->assertResponseStatus(200);
@@ -49,6 +65,20 @@ class UsersTest extends \TestCase
      */
     public function testCreatingUser()
     {
+        // Request without authentication
+        $this->post(UsersTest::URL, [
+            'name' => 'User teste',
+            'username' => 'User',
+            'email' => 'user@user.com',
+            'password' => '123',
+            'experience' => 1000
+        ]);
+        $this->assertResponseStatus(401);
+
+        // Authentication
+        $user = factory(\App\User::class)->create();
+        $this->actingAs($user);
+
         // Valid request
         $this->post(UsersTest::URL, [
             'name' => 'User teste',
@@ -74,6 +104,20 @@ class UsersTest extends \TestCase
      */
     public function testUpdatingUser()
     {
+        // Request without authentication
+        $this->put(UsersTest::URL . '1', [
+            'name' => 'User teste',
+            'username' => 'User',
+            'email' => 'user@user.com',
+            'password' => '123',
+            'experience' => 1000
+        ]);
+        $this->assertResponseStatus(401);
+
+        // Authentication
+        $user = factory(\App\User::class)->create();
+        $this->actingAs($user);
+
         // Valid request
         $this->put(UsersTest::URL . '1', [
             'name' => 'User teste',
@@ -109,6 +153,14 @@ class UsersTest extends \TestCase
      */
     public function testRemovingUser()
     {
+        // Request without authentication
+        $this->delete(UsersTest::URL . '1');
+        $this->assertResponseStatus(401);
+
+        // Authentication
+        $user = factory(\App\User::class)->create();
+        $this->actingAs($user);
+
         // Valid request
         $this->delete(UsersTest::URL . '1');
         $this->assertResponseStatus(204);

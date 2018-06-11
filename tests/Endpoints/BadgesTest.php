@@ -15,6 +15,14 @@ class BadgesTest extends \TestCase
      */
     public function testGettingAllBadges()
     {
+        // Request without authentication
+        $this->get(BadgesTest::URL);
+        $this->assertResponseStatus(401);
+
+        // Authentication
+        $user = factory(\App\User::class)->create();
+        $this->actingAs($user);
+
         // Get all badges with the authenticated user
         $this->get(BadgesTest::URL);
         $this->assertResponseOk();
@@ -31,6 +39,14 @@ class BadgesTest extends \TestCase
      */
     public function testGettingSpecificBadge()
     {
+        // Request without authentication
+        $this->get(BadgesTest::URL . '1');
+        $this->assertResponseStatus(401);
+
+        // Authentication
+        $user = factory(\App\User::class)->create();
+        $this->actingAs($user);
+
         // Get one badge
         $this->get(BadgesTest::URL . '1');
         $this->assertResponseStatus(200);
@@ -49,6 +65,17 @@ class BadgesTest extends \TestCase
      */
     public function testCreatingBadge()
     {
+        // Request without authentication
+        $this->post(BadgesTest::URL, [
+            'name' => 'Badge teste',
+            'experience' => 10
+        ]);
+        $this->assertResponseStatus(401);
+
+        // Authentication
+        $user = factory(\App\User::class)->create();
+        $this->actingAs($user);
+
         // Valid request
         $this->post(BadgesTest::URL, [
             'name' => 'Badge teste',
@@ -68,6 +95,17 @@ class BadgesTest extends \TestCase
      */
     public function testUpdatingBadge()
     {
+        // Request without authentication
+        $this->put(BadgesTest::URL . '1', [
+            'name' => 'Badge teste',
+            'experience' => 10
+        ]);
+        $this->assertResponseStatus(401);
+
+        // Authentication
+        $user = factory(\App\User::class)->create();
+        $this->actingAs($user);
+
         // Valid request
         $this->put(BadgesTest::URL . '1', [
             'name' => 'Badge teste',
@@ -94,6 +132,14 @@ class BadgesTest extends \TestCase
      */
     public function testRemovingBadge()
     {
+        // Request without authentication
+        $this->delete(BadgesTest::URL . '1');
+        $this->assertResponseStatus(401);
+
+        // Authentication
+        $user = factory(\App\User::class)->create();
+        $this->actingAs($user);
+
         // Valid request
         $this->delete(BadgesTest::URL . '1');
         $this->assertResponseStatus(204);

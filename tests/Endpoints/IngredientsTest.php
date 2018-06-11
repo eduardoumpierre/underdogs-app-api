@@ -15,6 +15,14 @@ class IngredientsTest extends \TestCase
      */
     public function testGettingAllIngredients()
     {
+        // Request without authentication
+        $this->get(IngredientsTest::URL);
+        $this->assertResponseStatus(401);
+
+        // Authentication
+        $user = factory(\App\User::class)->create();
+        $this->actingAs($user);
+
         // Get all ingredients with the authenticated user
         $this->get(IngredientsTest::URL);
         $this->assertResponseOk();
@@ -31,6 +39,14 @@ class IngredientsTest extends \TestCase
      */
     public function testGettingSpecificIngredient()
     {
+        // Request without authentication
+        $this->get(IngredientsTest::URL . '1');
+        $this->assertResponseStatus(401);
+
+        // Authentication
+        $user = factory(\App\User::class)->create();
+        $this->actingAs($user);
+
         // Get one ingredient
         $this->get(IngredientsTest::URL . '1');
         $this->assertResponseStatus(200);
@@ -49,6 +65,17 @@ class IngredientsTest extends \TestCase
      */
     public function testCreatingIngredient()
     {
+        // Request without authentication
+        $this->post(IngredientsTest::URL, [
+            'name' => 'Ingrediente teste',
+            'allergenic' => 1
+        ]);
+        $this->assertResponseStatus(401);
+
+        // Authentication
+        $user = factory(\App\User::class)->create();
+        $this->actingAs($user);
+
         // Valid request
         $this->post(IngredientsTest::URL, [
             'name' => 'Ingrediente teste',
@@ -68,6 +95,17 @@ class IngredientsTest extends \TestCase
      */
     public function testUpdatingIngredient()
     {
+        // Request without authentication
+        $this->put(IngredientsTest::URL . '1', [
+            'name' => 'Ingrediente teste',
+            'allergenic' => 1
+        ]);
+        $this->assertResponseStatus(401);
+
+        // Authentication
+        $user = factory(\App\User::class)->create();
+        $this->actingAs($user);
+
         // Valid request
         $this->put(IngredientsTest::URL . '1', [
             'name' => 'Ingrediente teste',
@@ -94,6 +132,14 @@ class IngredientsTest extends \TestCase
      */
     public function testRemovingIngredient()
     {
+        // Request without authentication
+        $this->delete(IngredientsTest::URL . '1');
+        $this->assertResponseStatus(401);
+
+        // Authentication
+        $user = factory(\App\User::class)->create();
+        $this->actingAs($user);
+
         // Valid request
         $this->delete(IngredientsTest::URL . '1');
         $this->assertResponseStatus(204);
