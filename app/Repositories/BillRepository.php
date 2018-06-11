@@ -53,7 +53,7 @@ class BillRepository implements BillInterface
             ->where('users_id', '=', $id)
             ->where('is_active', '=', true)
             ->limit(1)
-            ->first();
+            ->firstOrFail();
 
         if ($bill) {
             $total = 0;

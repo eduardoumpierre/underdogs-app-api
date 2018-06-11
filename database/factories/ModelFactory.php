@@ -18,6 +18,14 @@ $factory->define(App\Badge::class, function (Faker\Generator $faker) {
     ];
 });
 
+$factory->define(App\Bill::class, function (Faker\Generator $faker) {
+    return [
+        'is_active' => $faker->boolean(),
+        'users_id' => DB::table('users')->pluck('id')->random(),
+        'cards_id' => DB::table('cards')->pluck('id')->random(),
+    ];
+});
+
 $factory->define(App\Category::class, function (Faker\Generator $faker) {
     return [
         'name' => $faker->name

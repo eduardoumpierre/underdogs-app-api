@@ -41,8 +41,13 @@ class BillsTest extends \TestCase
         $user = factory(\App\User::class)->create();
         $this->actingAs($user);
 
+        factory(\App\Bill::class)->create([
+            'is_active' => true,
+            'users_id' => $user->id
+        ]);
+
         // Get one bill
-        $this->get(BillsTest::URL . '1');
+        $this->get(BillsTest::URL . $user->id);
         $this->assertResponseStatus(200);
 
         $this->seeJsonStructure([
