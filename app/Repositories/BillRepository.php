@@ -50,7 +50,10 @@ class BillRepository implements BillInterface
     {
         $bill = Bill::query()
             ->with(['card', 'user:id,name'])
-            ->find($id);
+            ->where('users_id', '=', $id)
+            ->where('is_active', '=', true)
+            ->limit(1)
+            ->first();
 
         if ($bill) {
             $total = 0;

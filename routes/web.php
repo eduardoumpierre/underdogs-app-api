@@ -11,29 +11,28 @@
 |
 */
 
-$router->get('/', function () use ($router) {
-    return $router->app->version();
-});
-
 /**
  * Api
  */
-$router->group(['prefix' => 'api/v1', 'middleware' => []], function () use ($router) {
+$router->group(['prefix' => 'api/v1'], function () use ($router) {
     /**
      * Products
      */
     $router->group(['prefix' => 'products'], function () use ($router) {
         $router->get('/', 'ProductController@getAll');
         $router->get('/{id}', 'ProductController@getOne');
-        $router->post('/', 'ProductController@create');
-        $router->put('/{id}', 'ProductController@update');
-        $router->delete('/{id}', 'ProductController@delete');
+
+        $router->group(['middleware' => ['auth']], function () use ($router) {
+            $router->post('/', 'ProductController@create');
+            $router->put('/{id}', 'ProductController@update');
+            $router->delete('/{id}', 'ProductController@delete');
+        });
     });
 
     /**
      * Categories
      */
-    $router->group(['prefix' => 'categories'], function () use ($router) {
+    $router->group(['prefix' => 'categories', 'middleware' => ['auth']], function () use ($router) {
         $router->get('/', 'CategoryController@getAll');
         $router->get('/{id}', 'CategoryController@getOne');
         $router->post('/', 'CategoryController@create');
@@ -44,7 +43,7 @@ $router->group(['prefix' => 'api/v1', 'middleware' => []], function () use ($rou
     /**
      * Ingredients
      */
-    $router->group(['prefix' => 'ingredients'], function () use ($router) {
+    $router->group(['prefix' => 'ingredients', 'middleware' => ['auth']], function () use ($router) {
         $router->get('/', 'IngredientController@getAll');
         $router->get('/{id}', 'IngredientController@getOne');
         $router->post('/', 'IngredientController@create');
@@ -55,7 +54,7 @@ $router->group(['prefix' => 'api/v1', 'middleware' => []], function () use ($rou
     /**
      * Badges
      */
-    $router->group(['prefix' => 'badges'], function () use ($router) {
+    $router->group(['prefix' => 'badges', 'middleware' => ['auth']], function () use ($router) {
         $router->get('/', 'BadgeController@getAll');
         $router->get('/{id}', 'BadgeController@getOne');
         $router->post('/', 'BadgeController@create');
@@ -66,7 +65,7 @@ $router->group(['prefix' => 'api/v1', 'middleware' => []], function () use ($rou
     /**
      * Users
      */
-    $router->group(['prefix' => 'users'], function () use ($router) {
+    $router->group(['prefix' => 'users', 'middleware' => ['auth']], function () use ($router) {
         $router->get('/', 'UserController@getAll');
         $router->get('/{id}', 'UserController@getOne');
         $router->post('/', 'UserController@create');
@@ -77,7 +76,7 @@ $router->group(['prefix' => 'api/v1', 'middleware' => []], function () use ($rou
     /**
      * Bills
      */
-    $router->group(['prefix' => 'bills'], function () use ($router) {
+    $router->group(['prefix' => 'bills', 'middleware' => ['auth']], function () use ($router) {
         $router->get('/', 'BillController@getAll');
         $router->get('/{id}', 'BillController@getOne');
         $router->post('/', 'BillController@create');
@@ -93,11 +92,18 @@ $router->group(['prefix' => 'api/v1', 'middleware' => []], function () use ($rou
     /**
      * Cards
      */
-    $router->group(['prefix' => 'cards'], function () use ($router) {
+    $router->group(['prefix' => 'cards', 'middleware' => ['auth']], function () use ($router) {
         $router->get('/', 'CardController@getAll');
         $router->get('/{id}', 'CardController@getOne');
         $router->post('/', 'CardController@create');
         $router->put('/{id}', 'CardController@update');
         $router->delete('/{id}', 'CardController@delete');
+    });
+
+    /**
+     * Auth
+     */
+    $router->group(['prefix' => 'auth'], function () use ($router) {
+        $router->get('/me', 'AuthController@me');
     });
 });
