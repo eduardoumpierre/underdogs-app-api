@@ -32,6 +32,10 @@
     "scripts": {
         "post-root-package-install": [
             "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
+        ],
+        "post-install-cmd": [
+            "chmod -R 777 storage",
+            "php artisan passport:keys"
         ]
     },
     "config": {
@@ -40,5 +44,6 @@
         "optimize-autoloader": true
     },
     "minimum-stability": "dev",
-    "prefer-stable": true
+    "prefer-stable": true,
+    "optimize-autoloader": true
 }
