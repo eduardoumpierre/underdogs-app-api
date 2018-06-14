@@ -14,7 +14,7 @@ class AddRoleToUsers extends Migration
     public function up()
     {
         Schema::table('users', function ($table) {
-            $table->smallInteger('role')->comment('0 = Usuario padrao, 1 = Administrador');
+            $table->smallInteger('role')->nullable()->comment('0 = Usuario padrao, 1 = Administrador');
         });
     }
 
