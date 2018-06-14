@@ -65,7 +65,8 @@ $factory->define(App\User::class, function (Faker\Generator $faker) {
         'email' => $faker->email,
         'password' => app('hash')->make('123'),
         'experience' => $number,
-        'levels_id' => DB::table('levels')->where('experience', '<=', $number)->orderByDesc('id')->first()->id
+        'levels_id' => DB::table('levels')->where('experience', '<=', $number)->orderByDesc('id')->first()->id,
+        'role' => $faker->numberBetween(0, 1)
     ];
 });
 

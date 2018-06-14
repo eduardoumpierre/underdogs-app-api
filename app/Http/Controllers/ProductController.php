@@ -23,16 +23,16 @@ class ProductController extends Controller
     }
 
     /**
+     * @param Request $request
      * @return array|Collection
      */
-    public function getAll()
+    public function getAll(Request $request)
     {
-        // @todo Add role control
-        if (true) {
-            return $this->getAllOrderedByCategory();
+        if ($request->user() && $request->user()->role > 0) {
+            return $this->productRepository->findAll();
         }
 
-        return $this->productRepository->findAll();
+        return $this->getAllOrderedByCategory();
     }
 
     /**
