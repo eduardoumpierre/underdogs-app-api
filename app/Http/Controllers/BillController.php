@@ -97,10 +97,10 @@ class BillController extends Controller
     {
         $this->validate($request, [
             'bills_id' => 'required|numeric',
-            'products_id' => 'required|numeric'
+            'products' => 'required|array'
         ]);
 
-        return response()->json($this->billProductRepository->create($request->all()), Response::HTTP_CREATED);
+        return response()->json($this->billProductRepository->insert($request->all()), Response::HTTP_CREATED);
     }
 
     /**

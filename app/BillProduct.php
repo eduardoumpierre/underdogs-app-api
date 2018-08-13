@@ -14,7 +14,7 @@ class BillProduct extends Model
      * @var array
      */
     protected $fillable = [
-        'is_active', 'bills_id', 'products_id'
+        'is_active', 'bills_id', 'products_id', 'note'
     ];
 
     /**

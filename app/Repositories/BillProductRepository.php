@@ -29,11 +29,17 @@ class BillProductRepository implements BillProductInterface
 
     /**
      * @param array $params
-     * @return $this|Model
+     * @return bool
      */
-    public function create(array $params): Model
+    public function insert(array $params)
     {
-        return BillProduct::query()->create($params);
+        $data = [];
+
+        foreach ($params['products'] as $key => $val) {
+            $data[$key] = array_merge(['bills_id' => $params['bills_id']], $val);
+        }
+
+        return BillProduct::query()->insert($data);
     }
 
     /**
