@@ -44,30 +44,28 @@ class BillRepository implements BillInterface
 
     /**
      * @param int $id
-     * @return Collection|Model|null|static|static[]
+     * @return \Illuminate\Database\Eloquent\Builder|Model
      */
     public function findOneByIdWithProducts(int $id)
     {
         $bill = Bill::query()
             ->with(['card', 'user:id,name'])
-            ->where('users_id', '=', $id)
+            ->where('id', '=', $id)
             ->where('is_active', '=', true)
             ->limit(1)
             ->firstOrFail();
 
-        if ($bill) {
-            $total = 0;
-            $products = $this->billProductRepository->findAllByBill($bill['id']);
-            $bill['products'] = $products;
+        $total = 0;
+        $products = $this->billProductRepository->findAllByBill($bill['id']);
+        $bill['products'] = $products;
 
-            foreach ($products as $key => $val) {
-                $total += $val['price'] * $val['quantity'];
-            }
-
-            $bill['total'] = $total;
+        foreach ($products as $key => $val) {
+            $total += $val['price'] * $val['quantity'];
         }
 
-        return $bill ? $bill : [];
+        $bill['total'] = $total;
+
+        return $bill;
     }
 
     /**
