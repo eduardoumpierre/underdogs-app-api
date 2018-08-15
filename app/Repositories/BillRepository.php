@@ -10,14 +10,17 @@ use Illuminate\Database\Eloquent\Model;
 class BillRepository implements BillInterface
 {
     private $billProductRepository;
+    private $userRepository;
 
     /**
      * BillRepository constructor.
      * @param BillProductRepository $bpr
+     * @param UserRepository $ur
      */
-    public function __construct(BillProductRepository $bpr)
+    public function __construct(BillProductRepository $bpr, UserRepository $ur)
     {
         $this->billProductRepository = $bpr;
+        $this->userRepository = $ur;
     }
 
     /**
@@ -104,4 +107,24 @@ class BillRepository implements BillInterface
         return null;
     }
 
+    /**
+     * @param int $id
+     * @return Collection|Model
+     */
+    public function checkout(int $id)
+    {
+        $bill = Bill::query()->where('is_active', '=', 1)->findOrFail($id);
+        $bill->is_active = 0;
+        $bill->update();
+
+        $products = $this->billProductRepository->findAllByBill($id, ['p.experience'])->toArray();
+
+        $experience = 0;
+
+        foreach ($products as $key => $val) {
+            $experience += $val['experience'];
+        }
+
+        return $this->userRepository->addExperience($bill->users_id, $experience);
+    }
 }

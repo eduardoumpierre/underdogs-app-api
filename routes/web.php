@@ -69,6 +69,7 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
         $router->get('/', 'UserController@getAll');
         $router->get('/{id}', 'UserController@getOne');
         $router->post('/', 'UserController@create');
+        $router->post('/quick', 'UserController@createQuickUser');
         $router->put('/{id}', 'UserController@update');
         $router->delete('/{id}', 'UserController@delete');
     });
@@ -86,7 +87,7 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
         $router->post('/products', 'BillController@addProduct');
         $router->delete('/{id}/products/{productId}', 'BillController@deleteProduct');
 
-        $router->post('/payment', 'BillController@payBill');
+        $router->post('/checkout', 'BillController@checkout');
     });
 
     /**

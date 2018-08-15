@@ -117,8 +117,12 @@ class BillController extends Controller
      * @param Request $request
      * @return Collection|Model
      */
-    public function payBill(Request $request)
+    public function checkout(Request $request)
     {
-        return $this->userRepository->addExperience(1, 1000);
+        $this->validate($request, [
+            'id' => 'required|numeric'
+        ]);
+
+        return $this->billRepository->checkout($request->all()['id']);
     }
 }

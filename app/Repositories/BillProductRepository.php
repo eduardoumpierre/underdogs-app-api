@@ -36,7 +36,11 @@ class BillProductRepository implements BillProductInterface
         $data = [];
 
         foreach ($params['products'] as $key => $val) {
-            $data[$key] = array_merge(['bills_id' => $params['bills_id']], $val);
+            $data[$key] = array_merge([
+                'bills_id' => $params['bills_id'],
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s')
+            ], $val);
         }
 
         return BillProduct::query()->insert($data);
@@ -69,13 +73,18 @@ class BillProductRepository implements BillProductInterface
 
     /**
      * @param int $id
+     * @param array $params
      * @return Collection|static[]
      */
-    public function findAllByBill(int $id)
+    public function findAllByBill(int $id, array $params = null)
     {
+        if (!$params) {
+            $params = ['p.id', 'p.name', 'p.price', DB::raw('COALESCE(COUNT(p.id), 0) as quantity')];
+        }
+
         $query = BillProduct::query()
             ->from('bills_products AS bp')
-            ->select(['p.id', 'p.name', 'p.price', DB::raw('COALESCE(COUNT(p.id), 0) as quantity')])
+            ->select($params)
             ->join('products AS p', 'p.id', '=', 'bp.products_id')
             ->where('bp.bills_id', '=', $id)
             ->groupBy('p.id')

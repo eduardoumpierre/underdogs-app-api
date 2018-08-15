@@ -10,14 +10,17 @@ use Illuminate\Database\Eloquent\Model;
 class ProductRepository implements ProductInterface
 {
     private $categoryRepository;
+    private $productIngredientRepository;
 
     /**
      * ProductRepository constructor.
      * @param CategoryRepository $cr
+     * @param ProductIngredientRepository $pir
      */
-    public function __construct(CategoryRepository $cr)
+    public function __construct(CategoryRepository $cr, ProductIngredientRepository $pir)
     {
         $this->categoryRepository = $cr;
+        $this->productIngredientRepository = $pir;
     }
 
 
@@ -31,11 +34,14 @@ class ProductRepository implements ProductInterface
 
     /**
      * @param int $id
-     * @return Model
+     * @return Collection|Model
      */
     public function findOneById(int $id): Model
     {
-        return Product::query()->with('ingredients.ingredient:id,name,allergenic')->findOrFail($id);
+        $product = Product::query()->findOrFail($id);
+        $product['ingredients'] = $this->productIngredientRepository->findAllByProductId($id);
+
+        return $product;
     }
 
     /**
@@ -44,7 +50,11 @@ class ProductRepository implements ProductInterface
      */
     public function create(array $params): Model
     {
-        return Product::query()->create($params);
+        $product = Product::query()->create($params);
+
+        $this->productIngredientRepository->insert($product->id, $params['ingredients']);
+
+        return $product;
     }
 
     /**
@@ -57,6 +67,8 @@ class ProductRepository implements ProductInterface
         $product = Product::query()->findOrFail($id);
         $product->update($params);
 
+        $this->productIngredientRepository->insert($product->id, $params['ingredients'], true);
+
         return $product;
     }
 
@@ -67,6 +79,8 @@ class ProductRepository implements ProductInterface
      */
     public function delete(int $id)
     {
+        $this->productIngredientRepository->removeAllProducts($id);
+
         Product::query()->findOrFail($id)->delete();
 
         return null;

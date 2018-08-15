@@ -27,6 +27,19 @@ class ProductIngredientRepository implements ProductIngredientInterface
     }
 
     /**
+     * @param int $id
+     * @return array
+     */
+    public function findAllByProductId(int $id) {
+        return ProductIngredient::query()
+            ->from('products_ingredients AS pi')
+            ->select(['i.id', 'i.name', 'i.allergenic'])
+            ->join('ingredients AS i', 'i.id', '=', 'pi.ingredients_id')
+            ->where('pi.products_id', '=', $id)
+            ->get();
+    }
+
+    /**
      * @param array $params
      * @return $this|Model
      */
@@ -59,4 +72,36 @@ class ProductIngredientRepository implements ProductIngredientInterface
         return null;
     }
 
+    /**
+     * @param int $id
+     * @param array $ingredients
+     * @param bool $removeOld
+     * @return bool
+     */
+    public function insert(int $id, array $ingredients, bool $removeOld = false)
+    {
+        if ($removeOld) {
+            $this->removeAllProducts($id);
+        }
+
+        $data = [];
+
+        foreach ($ingredients as $key => $val) {
+            $data[$key] = [
+                'ingredients_id' => $val,
+                'products_id' => $id,
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s')
+            ];
+        }
+
+        return ProductIngredient::query()->insert($data);
+    }
+
+    /**
+     * @param int $id
+     */
+    public function removeAllProducts(int $id) {
+        ProductIngredient::query()->where('products_id', '=', $id)->delete();
+    }
 }

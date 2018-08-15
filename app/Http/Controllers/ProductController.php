@@ -45,11 +45,11 @@ class ProductController extends Controller
 
     /**
      * @param int $id
-     * @return Model
+     * @return JsonResponse
      */
-    public function getOne(int $id): Model
+    public function getOne(int $id): JsonResponse
     {
-        return $this->productRepository->findOneById($id);
+        return response()->json($this->productRepository->findOneById($id));
     }
 
     /**
