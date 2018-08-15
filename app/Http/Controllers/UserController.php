@@ -23,10 +23,15 @@ class UserController extends Controller
     }
 
     /**
+     * @param Request $request
      * @return Collection
      */
-    public function getAll(): Collection
+    public function getAll(Request $request): Collection
     {
+        if ($request->get('active')) {
+            return $this->userRepository->findAllWithActiveStatus();
+        }
+
         return $this->userRepository->findAll();
     }
 
@@ -50,8 +55,24 @@ class UserController extends Controller
             'name' => 'required',
             'username' => 'required|unique:users',
             'email' => 'required|unique:users',
-            'password' => 'required',
-            'experience' => 'required|numeric'
+            'cpf' => 'required|unique:users',
+            'password' => 'required'
+        ]);
+
+        return response()->json($this->userRepository->create($request->all()), Response::HTTP_CREATED);
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     * @throws \Illuminate\Validation\ValidationException
+     */
+    public function createQuickUser(Request $request): JsonResponse
+    {
+        $this->validate($request, [
+            'name' => 'required',
+            'email' => 'required|unique:users',
+            'cpf' => 'required|unique:users'
         ]);
 
         return response()->json($this->userRepository->create($request->all()), Response::HTTP_CREATED);

@@ -2,10 +2,12 @@
 
 namespace App\Repositories;
 
+use App\Bill;
 use App\User;
 use App\Interfaces\UserInterface;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class UserRepository implements UserInterface
 {
@@ -33,6 +35,18 @@ class UserRepository implements UserInterface
     }
 
     /**
+     * @return Collection|\Illuminate\Support\Collection|static[]
+     */
+    public function findAllWithActiveStatus()
+    {
+        return User::query()
+            ->from('users AS u')
+            ->select(['u.id', 'u.name', 'u.cpf', DB::raw('COALESCE((SELECT is_active FROM bills WHERE users_id = u.id ORDER BY is_active DESC LIMIT 1), 0) AS is_active')])
+            ->orderBy('is_active')
+            ->get();
+    }
+
+    /**
      * @param int $id
      * @param array $columns
      * @return Model
@@ -56,6 +70,13 @@ class UserRepository implements UserInterface
      */
     public function create(array $params): Model
     {
+        $params['experience'] = 0;
+        $params['levels_id'] = 1;
+
+        if (!isset($params['role'])) {
+            $params['role'] = 0;
+        }
+
         return User::query()->create($params);
     }
 
