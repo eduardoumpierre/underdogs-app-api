@@ -23,10 +23,15 @@ class CardController extends Controller
     }
 
     /**
+     * @param Request $request
      * @return Collection
      */
-    public function getAll(): Collection
+    public function getAll(Request $request): Collection
     {
+        if ($request->get('active')) {
+            return $this->cardRepository->findAllInactive();    
+        }
+
         return $this->cardRepository->findAll();
     }
 

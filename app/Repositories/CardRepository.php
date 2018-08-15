@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Bill;
 use App\Interfaces\CardInterface;
 use App\Card;
 use Illuminate\Database\Eloquent\Collection;
@@ -15,6 +16,18 @@ class CardRepository implements CardInterface
     public function findAll(): Collection
     {
         return Card::query()->get();
+    }
+
+    /**
+     * @return Collection|\Illuminate\Support\Collection|static[]
+     */
+    public function findAllInactive()
+    {
+        $activeCardsIds = Bill::query()
+            ->select('cards_id AS id')
+            ->where('is_active', '=', 1)->get();
+
+        return Card::query()->whereNotIn('id', $activeCardsIds)->get();
     }
 
     /**
