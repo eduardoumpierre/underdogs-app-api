@@ -67,7 +67,8 @@ class ProductsTest extends \TestCase
             'name' => 'Produto teste',
             'price' => '19,90',
             'experience' => '15',
-            'categories_id' => 1
+            'categories_id' => 1,
+            'ingredients' => []
         ]);
         $this->assertResponseStatus(201);
 
@@ -101,7 +102,8 @@ class ProductsTest extends \TestCase
             'name' => 'Produto teste',
             'price' => '19,90',
             'experience' => '15',
-            'categories_id' => 1
+            'categories_id' => 1,
+            'ingredients' => []
         ]);
         $this->assertResponseStatus(200);
 
