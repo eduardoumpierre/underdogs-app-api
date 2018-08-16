@@ -73,13 +73,18 @@ class BillProductRepository implements BillProductInterface
 
     /**
      * @param int $id
-     * @param array $params
+     * @param array|null $params
+     * @param bool $stack
      * @return Collection|static[]
      */
-    public function findAllByBill(int $id, array $params = null)
+    public function findAllByBill(int $id, array $params = null, bool $stack = false)
     {
         if (!$params) {
-            $params = ['p.id', 'p.name', 'p.price', DB::raw('COALESCE(COUNT(p.id), 0) as quantity')];
+            $params = ['p.id', 'p.name', 'p.price'];
+        }
+
+        if ($stack) {
+            $params[] = DB::raw('COALESCE(COUNT(p.id), 0) as quantity');
         }
 
         $query = BillProduct::query()
@@ -87,7 +92,7 @@ class BillProductRepository implements BillProductInterface
             ->select($params)
             ->join('products AS p', 'p.id', '=', 'bp.products_id')
             ->where('bp.bills_id', '=', $id)
-            ->groupBy('p.id')
+            ->orderByDesc('bp.created_at')
             ->get();
 
         return $query;
@@ -96,12 +101,17 @@ class BillProductRepository implements BillProductInterface
     /**
      * @param int $id
      * @param int $productId
-     * @return null
+     * @return mixed
      */
-    public function deleteAllProductsById(int $id, int $productId)
+    public function deleteOneProductById(int $id, int $productId)
     {
         BillProduct::query()->where('bills_id', '=', $id)->where('products_id', '=', $productId)->delete();
 
-        return null;
+        return BillProduct::query()
+            ->from('bills_products AS bp')
+            ->select(DB::raw('COALESCE(SUM(p.price), 0) as total'))
+            ->join('products AS p', 'p.id', '=', 'bp.products_id')
+            ->where('bp.bills_id', '=', $id)
+            ->get()->toArray()[0];
     }
 }
