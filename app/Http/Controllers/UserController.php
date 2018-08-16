@@ -90,8 +90,7 @@ class UserController extends Controller
             'name' => 'required',
             'username' => 'required|unique:users,username,' . $id,
             'email' => 'required|unique:users,email,' . $id,
-            'password' => 'required',
-            'experience' => 'required|numeric'
+            'password' => 'required'
         ]);
 
         return response()->json($this->userRepository->update($request->all(), $id));

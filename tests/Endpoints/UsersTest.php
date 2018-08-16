@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Pichau
- * Date: 23/04/2018
- * Time: 15:19
- */
 
 class UsersTest extends \TestCase
 {
@@ -30,6 +24,16 @@ class UsersTest extends \TestCase
         $this->seeJsonStructure([
             '*' => [
                 'id', 'name', 'username', 'email', 'experience'
+            ]
+        ]);
+
+        // Get all users with the authenticated user
+        $this->get(UsersTest::URL . '?active=true');
+        $this->assertResponseOk();
+
+        $this->seeJsonStructure([
+            '*' => [
+                'id', 'name', 'cpf', 'is_active'
             ]
         ]);
     }
@@ -71,7 +75,8 @@ class UsersTest extends \TestCase
             'username' => 'User',
             'email' => 'user@user.com',
             'password' => '123',
-            'experience' => 1000
+            'experience' => 1000,
+            'cpf' => '123.123.123-12'
         ]);
         $this->assertResponseStatus(401);
 
@@ -85,7 +90,8 @@ class UsersTest extends \TestCase
             'username' => 'User',
             'email' => 'user@user.com',
             'password' => '123',
-            'experience' => 1000
+            'experience' => 1000,
+            'cpf' => '123.123.123-12'
         ]);
         $this->assertResponseStatus(201);
 
