@@ -47,7 +47,7 @@ class BillsTest extends \TestCase
         ]);
 
         // Get one bill
-        $this->get(BillsTest::URL . $user->id);
+        $this->get(BillsTest::URL . '1');
         $this->assertResponseStatus(200);
 
         $this->seeJsonStructure([
@@ -146,5 +146,25 @@ class BillsTest extends \TestCase
         // Invalid request - bill don't exists
         $this->delete(BillsTest::URL . '4444');
         $this->assertResponseStatus(404);
+    }
+
+    /**
+     * Checkout test
+     */
+    public function testCheckout()
+    {
+        // Request without authentication
+        $this->delete(BillsTest::URL . '1');
+        $this->assertResponseStatus(401);
+
+        // Authentication
+        $user = factory(\App\User::class)->create();
+        $this->actingAs($user);
+
+        // Valid request
+        $this->post(BillsTest::URL . 'checkout', [
+            'id' => 1
+        ]);
+        $this->assertResponseStatus(200);
     }
 }
