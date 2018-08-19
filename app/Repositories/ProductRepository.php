@@ -108,6 +108,12 @@ class ProductRepository implements ProductInterface
      */
     public function findAllByCategory(int $id)
     {
-        return Product::query()->where('categories_id', '=', $id)->get();
+        $products = Product::query()->where('categories_id', '=', $id)->get();
+
+        foreach ($products as $key => $val) {
+            $products[$key]['ingredients'] = $this->productIngredientRepository->findAllByProductId($val->id);
+        }
+
+        return $products;
     }
 }
