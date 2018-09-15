@@ -19,7 +19,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      * @var array
      */
     protected $fillable = [
-        'name', 'username', 'email', 'password', 'experience', 'levels_id', 'role', 'cpf', 'phone'
+        'name', 'username', 'email', 'password', 'experience', 'levels_id', 'role', 'cpf', 'phone', 'birthday'
     ];
 
     /**
@@ -47,5 +47,15 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     public function badges()
     {
         return $this->hasMany('App\UserBadge', 'users_id', 'id');
+    }
+
+    /**
+     * Passport login find user by email and username
+     *
+     * @param $username
+     * @return mixed
+     */
+    public function findForPassport($username){
+        return $user = (new User)->where('email', $username)->orWhere('username', $username)->first();
     }
 }

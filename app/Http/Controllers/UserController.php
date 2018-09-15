@@ -56,7 +56,8 @@ class UserController extends Controller
             'username' => 'required|unique:users',
             'email' => 'required|unique:users',
             'cpf' => 'required|unique:users',
-            'password' => 'required'
+            'password' => 'required',
+            'birthday' => 'required'
         ]);
 
         return response()->json($this->userRepository->create($request->all()), Response::HTTP_CREATED);

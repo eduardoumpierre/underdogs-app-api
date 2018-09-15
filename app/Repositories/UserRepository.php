@@ -77,6 +77,8 @@ class UserRepository implements UserInterface
             $params['role'] = 0;
         }
 
+        $params['password'] = app('hash')->make($params['password']);
+
         return User::query()->create($params);
     }
 

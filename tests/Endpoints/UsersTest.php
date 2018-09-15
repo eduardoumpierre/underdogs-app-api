@@ -69,21 +69,6 @@ class UsersTest extends \TestCase
      */
     public function testCreatingUser()
     {
-        // Request without authentication
-        $this->post(UsersTest::URL, [
-            'name' => 'User teste',
-            'username' => 'User',
-            'email' => 'user@user.com',
-            'password' => '123',
-            'experience' => 1000,
-            'cpf' => '123.123.123-12'
-        ]);
-        $this->assertResponseStatus(401);
-
-        // Authentication
-        $user = factory(\App\User::class)->create();
-        $this->actingAs($user);
-
         // Valid request
         $this->post(UsersTest::URL, [
             'name' => 'User teste',
@@ -91,7 +76,8 @@ class UsersTest extends \TestCase
             'email' => 'user@user.com',
             'password' => '123',
             'experience' => 1000,
-            'cpf' => '123.123.123-12'
+            'cpf' => '123.123.123-12',
+            'birthday' => '08/12/1996'
         ]);
         $this->assertResponseStatus(201);
 
