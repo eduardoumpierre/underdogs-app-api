@@ -89,7 +89,7 @@ class BillRepository implements BillInterface
         $bill['products'] = $products;
 
         foreach ($products as $key => $val) {
-            $total += $val['price'];
+            $total += $val['price'] * $val['quantity'];
         }
 
         $bill['total'] = $total;
