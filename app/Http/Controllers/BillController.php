@@ -44,7 +44,7 @@ class BillController extends Controller
      */
     public function getOne(int $id)
     {
-        return $this->billRepository->findOneByIdWithProducts($id);
+        return $this->billRepository->findOneByUserIdWithProducts($id);
     }
 
     /**
