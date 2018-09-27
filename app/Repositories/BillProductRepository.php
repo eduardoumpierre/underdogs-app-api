@@ -92,8 +92,13 @@ class BillProductRepository implements BillProductInterface
             ->select($params)
             ->join('products AS p', 'p.id', '=', 'bp.products_id')
             ->where('bp.bills_id', '=', $id)
-            ->orderByDesc('bp.created_at')
-            ->get();
+            ->orderByDesc('bp.created_at');
+
+        if ($stack) {
+            $query->groupBy('p.id');
+        }
+
+        $query = $query->get();
 
         return $query;
     }
