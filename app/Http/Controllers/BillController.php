@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
 
 class BillController extends Controller
 {
@@ -44,7 +45,11 @@ class BillController extends Controller
      */
     public function getOne(int $id)
     {
-        return $this->billRepository->findOneByUserIdWithProducts($id);
+        if (Auth::user()->role == 0) {
+            return $this->billRepository->findOneByUserIdWithProducts($id);
+        }
+
+        return $this->billRepository->findOneByIdWithProducts($id);
     }
 
     /**
@@ -116,6 +121,7 @@ class BillController extends Controller
     /**
      * @param Request $request
      * @return Collection|Model
+     * @throws \Illuminate\Validation\ValidationException
      */
     public function checkout(Request $request)
     {

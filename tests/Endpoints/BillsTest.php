@@ -154,7 +154,7 @@ class BillsTest extends \TestCase
     public function testCheckout()
     {
         // Request without authentication
-        $this->delete(BillsTest::URL . '1');
+        $this->post(BillsTest::URL . 'checkout');
         $this->assertResponseStatus(401);
 
         // Authentication
@@ -166,5 +166,59 @@ class BillsTest extends \TestCase
             'id' => 1
         ]);
         $this->assertResponseStatus(200);
+    }
+
+    /**
+     * Add product to bill test
+     */
+    public function testAddProduct()
+    {
+        // Request without authentication
+        $this->post(BillsTest::URL . 'products');
+        $this->assertResponseStatus(401);
+
+        // Authentication
+        $user = factory(\App\User::class)->create();
+        $this->actingAs($user);
+
+        // Valid request
+        $this->post(BillsTest::URL . 'products', [
+            'bills_id' => 1,
+            'products' => [
+                [
+                    'products_id' => 1,
+                    'note' => ''
+                ]
+            ]
+        ]);
+        $this->assertResponseStatus(201);
+    }
+
+    /**
+     * Remove product from bill test
+     */
+    public function testRemoveProduct()
+    {
+        // Request without authentication
+        $this->delete(BillsTest::URL . '1/products/1');
+        $this->assertResponseStatus(401);
+
+        // Authentication
+        $user = factory(\App\User::class)->create();
+        $this->actingAs($user);
+
+        // Valid request
+        $this->post(BillsTest::URL . 'products', [
+            'bills_id' => 1,
+            'products' => [
+                [
+                    'products_id' => 1,
+                    'note' => ''
+                ]
+            ]
+        ]);
+
+        $this->delete(BillsTest::URL . '1/products/1');
+        $this->assertResponseOk();
     }
 }
