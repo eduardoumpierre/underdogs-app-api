@@ -45,11 +45,11 @@ class BillController extends Controller
      */
     public function getOne(int $id)
     {
-        if (Auth::user()->role == 0) {
-            return $this->billRepository->findOneByUserIdWithProducts($id);
+        if (Auth::user()->role == 1) {
+            return $this->billRepository->findOneByIdWithProducts($id);
         }
 
-        return $this->billRepository->findOneByIdWithProducts($id);
+        return $this->billRepository->findOneByUserIdWithProducts($id);
     }
 
     /**

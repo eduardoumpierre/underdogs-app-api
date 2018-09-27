@@ -34,11 +34,13 @@ class BillsTest extends \TestCase
     public function testGettingSpecificBill()
     {
         // Request without authentication
-        $this->get(BillsTest::URL . '1');
+        $this->get(BillsTest::URL . 1);
         $this->assertResponseStatus(401);
 
         // Authentication
-        $user = factory(\App\User::class)->create();
+        $user = factory(\App\User::class)->create([
+            'role' => 0
+        ]);
         $this->actingAs($user);
 
         factory(\App\Bill::class)->create([
@@ -46,8 +48,10 @@ class BillsTest extends \TestCase
             'users_id' => $user->id
         ]);
 
+        $bill = \Illuminate\Support\Facades\DB::table('bills')->where('is_active', '=', true)->first()->users_id;
+
         // Get one bill
-        $this->get(BillsTest::URL . '1');
+        $this->get(BillsTest::URL . $bill);
         $this->assertResponseStatus(200);
 
         $this->seeJsonStructure([
@@ -77,14 +81,14 @@ class BillsTest extends \TestCase
 
         // Valid request
         $this->post(BillsTest::URL, [
-            'users_id' => 1,
+            'users_id' => $user->id,
             'cards_id' => 1
         ]);
         $this->assertResponseStatus(201);
 
         // Invalid request - required fields are missing
         $this->post(BillsTest::URL, [
-            'users_id' => 1,
+            'users_id' => $user->id,
         ]);
         $this->assertResponseStatus(422);
     }
@@ -94,8 +98,10 @@ class BillsTest extends \TestCase
      */
     public function testUpdatingBill()
     {
+        $bill = \Illuminate\Support\Facades\DB::table('bills')->pluck('id')->random();
+
         // Request without authentication
-        $this->put(BillsTest::URL . '1', [
+        $this->put(BillsTest::URL . $bill, [
             'users_id' => 1,
             'cards_id' => 1
         ]);
@@ -106,14 +112,14 @@ class BillsTest extends \TestCase
         $this->actingAs($user);
 
         // Valid request
-        $this->put(BillsTest::URL . '1', [
+        $this->put(BillsTest::URL . $bill, [
             'users_id' => 1,
             'cards_id' => 1
         ]);
         $this->assertResponseStatus(200);
 
         // Invalid request - required fields are missing
-        $this->put(BillsTest::URL . '1', [
+        $this->put(BillsTest::URL . $bill, [
             'users_id' => 1,
         ]);
         $this->assertResponseStatus(422);
@@ -131,8 +137,10 @@ class BillsTest extends \TestCase
      */
     public function testRemovingBill()
     {
+        $bill = \Illuminate\Support\Facades\DB::table('bills')->pluck('id')->random();
+
         // Request without authentication
-        $this->delete(BillsTest::URL . '1');
+        $this->delete(BillsTest::URL . $bill);
         $this->assertResponseStatus(401);
 
         // Authentication
@@ -140,7 +148,7 @@ class BillsTest extends \TestCase
         $this->actingAs($user);
 
         // Valid request
-        $this->delete(BillsTest::URL . '1');
+        $this->delete(BillsTest::URL . $bill);
         $this->assertResponseStatus(204);
 
         // Invalid request - bill don't exists
@@ -161,9 +169,16 @@ class BillsTest extends \TestCase
         $user = factory(\App\User::class)->create();
         $this->actingAs($user);
 
+        factory(\App\Bill::class)->create([
+            'is_active' => true,
+            'users_id' => $user->id
+        ]);
+
+        $bill = \Illuminate\Support\Facades\DB::table('bills')->where('is_active', '=', true)->first()->id;
+
         // Valid request
         $this->post(BillsTest::URL . 'checkout', [
-            'id' => 1
+            'id' => $bill
         ]);
         $this->assertResponseStatus(200);
     }
@@ -181,9 +196,16 @@ class BillsTest extends \TestCase
         $user = factory(\App\User::class)->create();
         $this->actingAs($user);
 
+        factory(\App\Bill::class)->create([
+            'is_active' => true,
+            'users_id' => $user->id
+        ]);
+
+        $bill = \Illuminate\Support\Facades\DB::table('bills')->where('is_active', '=', true)->first()->id;
+
         // Valid request
         $this->post(BillsTest::URL . 'products', [
-            'bills_id' => 1,
+            'bills_id' => $bill,
             'products' => [
                 [
                     'products_id' => 1,
@@ -207,9 +229,16 @@ class BillsTest extends \TestCase
         $user = factory(\App\User::class)->create();
         $this->actingAs($user);
 
+        factory(\App\Bill::class)->create([
+            'is_active' => true,
+            'users_id' => $user->id
+        ]);
+
+        $bill = \Illuminate\Support\Facades\DB::table('bills')->where('is_active', '=', true)->first()->id;
+
         // Valid request
         $this->post(BillsTest::URL . 'products', [
-            'bills_id' => 1,
+            'bills_id' => $bill,
             'products' => [
                 [
                     'products_id' => 1,
