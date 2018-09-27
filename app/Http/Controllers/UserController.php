@@ -76,7 +76,7 @@ class UserController extends Controller
             'cpf' => 'required|unique:users'
         ]);
 
-        return response()->json($this->userRepository->create($request->all()), Response::HTTP_CREATED);
+        return response()->json($this->userRepository->create($request->all(), true), Response::HTTP_CREATED);
     }
 
     /**

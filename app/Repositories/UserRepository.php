@@ -66,9 +66,10 @@ class UserRepository implements UserInterface
 
     /**
      * @param array $params
-     * @return $this|Model
+     * @param bool $isQuickInsert
+     * @return Model
      */
-    public function create(array $params): Model
+    public function create(array $params, bool $isQuickInsert = false): Model
     {
         $params['experience'] = 0;
         $params['levels_id'] = 1;
@@ -77,7 +78,9 @@ class UserRepository implements UserInterface
             $params['role'] = 0;
         }
 
-        $params['password'] = app('hash')->make($params['password']);
+        if (!$isQuickInsert) {
+            $params['password'] = app('hash')->make($params['password']);
+        }
 
         return User::query()->create($params);
     }
