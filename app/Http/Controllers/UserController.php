@@ -90,8 +90,7 @@ class UserController extends Controller
         $this->validate($request, [
             'name' => 'required',
             'username' => 'required|unique:users,username,' . $id,
-            'email' => 'required|unique:users,email,' . $id,
-            'password' => 'required'
+            'email' => 'required|unique:users,email,' . $id
         ]);
 
         return response()->json($this->userRepository->update($request->all(), $id));

@@ -123,7 +123,6 @@ class UsersTest extends \TestCase
         // Invalid request - required fields are missing
         $this->put(UsersTest::URL . '1', [
             'name' => 'User teste',
-            'username' => 'User',
             'email' => 'user@user.com',
             'experience' => 1000
         ]);
