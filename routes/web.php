@@ -60,6 +60,8 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
         $router->post('/', 'LevelController@create');
         $router->put('/{id}', 'LevelController@update');
         $router->delete('/{id}', 'LevelController@delete');
+
+        $router->post('/{id}/drops', 'LevelController@updateDrops');
     });
 
     /**
