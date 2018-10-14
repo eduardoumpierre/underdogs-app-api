@@ -52,6 +52,17 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
     });
 
     /**
+     * Levels
+     */
+    $router->group(['prefix' => 'levels', 'middleware' => ['auth']], function () use ($router) {
+        $router->get('/', 'LevelController@getAll');
+        $router->get('/{id}', 'LevelController@getOne');
+        $router->post('/', 'LevelController@create');
+        $router->put('/{id}', 'LevelController@update');
+        $router->delete('/{id}', 'LevelController@delete');
+    });
+
+    /**
      * Badges
      */
     $router->group(['prefix' => 'badges', 'middleware' => ['auth']], function () use ($router) {
