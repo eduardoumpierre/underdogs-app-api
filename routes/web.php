@@ -63,6 +63,17 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
     });
 
     /**
+     * Drops
+     */
+    $router->group(['prefix' => 'drops', 'middleware' => ['auth']], function () use ($router) {
+        $router->get('/', 'DropController@getAll');
+        $router->get('/{id}', 'DropController@getOne');
+        $router->post('/', 'DropController@create');
+        $router->put('/{id}', 'DropController@update');
+        $router->delete('/{id}', 'DropController@delete');
+    });
+
+    /**
      * Badges
      */
     $router->group(['prefix' => 'badges', 'middleware' => ['auth']], function () use ($router) {
