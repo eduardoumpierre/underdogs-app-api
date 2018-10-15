@@ -103,3 +103,11 @@ $factory->define(App\LevelDrop::class, function (Faker\Generator $faker) {
         'drops_id' => DB::table('drops')->pluck('id')->random()
     ];
 });
+
+$factory->define(App\Schedule::class, function (Faker\Generator $faker) {
+    return [
+        'title' => $faker->word,
+        'description' => $faker->realText(),
+        'date' => $faker->dateTimeBetween('+0 days', '+1 year')
+    ];
+});

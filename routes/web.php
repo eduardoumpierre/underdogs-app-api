@@ -74,6 +74,20 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
     });
 
     /**
+     * Schedule
+     */
+    $router->group(['prefix' => 'schedule'], function () use ($router) {
+        $router->get('/', 'ScheduleController@getAll');
+        $router->get('/{id}', 'ScheduleController@getOne');
+
+        $router->group(['middleware' => ['auth']], function () use ($router) {
+            $router->post('/', 'ScheduleController@create');
+            $router->put('/{id}', 'ScheduleController@update');
+            $router->delete('/{id}', 'ScheduleController@delete');
+        });
+    });
+
+    /**
      * Badges
      */
     $router->group(['prefix' => 'badges', 'middleware' => ['auth']], function () use ($router) {
