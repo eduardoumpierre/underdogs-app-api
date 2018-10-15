@@ -48,7 +48,8 @@ class LevelController extends Controller
     {
         $this->validate($request, [
             'number' => 'required|numeric|unique:levels',
-            'experience' => 'required|numeric'
+            'experience' => 'required|numeric',
+            'drops' => 'required|array'
         ]);
 
         return response()->json($this->levelRepository->create($request->all()), Response::HTTP_CREATED);
@@ -64,7 +65,8 @@ class LevelController extends Controller
     {
         $this->validate($request, [
             'number' => 'required|numeric|unique:levels,number,' . $id,
-            'experience' => 'required|numeric'
+            'experience' => 'required|numeric',
+            'drops' => 'required|array'
         ]);
 
         return response()->json($this->levelRepository->update($request->all(), $id));

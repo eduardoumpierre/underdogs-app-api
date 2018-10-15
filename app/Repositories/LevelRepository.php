@@ -4,11 +4,23 @@ namespace App\Repositories;
 
 use App\Interfaces\LevelInterface;
 use App\Level;
+use App\LevelDrop;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 
 class LevelRepository implements LevelInterface
 {
+    private $levelDropRepository;
+
+    /**
+     * LevelRepository constructor.
+     * @param LevelDropRepository $ldr
+     */
+    public function __construct(LevelDropRepository $ldr)
+    {
+        $this->levelDropRepository = $ldr;
+    }
+
     /**
      * @return Collection
      */
@@ -23,7 +35,10 @@ class LevelRepository implements LevelInterface
      */
     public function findOneById(int $id): Model
     {
-        return Level::query()->findOrFail($id);
+        $level = Level::query()->findOrFail($id);
+        $level['drops'] = $this->levelDropRepository->findAllByLevelId($id);
+
+        return $level;
     }
 
     /**
@@ -42,7 +57,11 @@ class LevelRepository implements LevelInterface
      */
     public function create(array $params): Model
     {
-        return Level::query()->create($params);
+        $level = Level::query()->create($params);
+
+        $this->levelDropRepository->insert($params['drops']);
+
+        return $level;
     }
 
     /**
@@ -54,6 +73,8 @@ class LevelRepository implements LevelInterface
     {
         $level = Level::query()->findOrFail($id);
         $level->update($params);
+
+        $this->levelDropRepository->insert($params['drops'], $id);
 
         return $level;
     }

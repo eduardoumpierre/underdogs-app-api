@@ -68,4 +68,42 @@ class LevelDropRepository implements LevelDropInterface
     {
         return LevelDrop::query()->where('levels_id', '=', $id)->inRandomOrder()->get()->first();
     }
+
+    /**
+     * @param int $id
+     * @return Collection|static[]
+     */
+    public function findAllByLevelId(int $id)
+    {
+        return LevelDrop::query()
+            ->from('levels_drops AS ld')
+            ->select(['d.id', 'd.description'])
+            ->join('drops AS d', 'ld.drops_id', '=', 'd.id')
+            ->where('ld.levels_id', '=', $id)
+            ->get();
+    }
+
+    /**
+     * @param array $drops
+     * @param int|null $id
+     * @return bool
+     */
+    public function insert(array $drops, int $id = null)
+    {
+        if ($id) {
+            LevelDrop::query()->where('levels_id', '=', $id)->delete();
+        }
+        $data = [];
+
+        foreach ($drops as $key => $val) {
+            $data[$key] = [
+                'drops_id' => $val,
+                'levels_id' => $id,
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s')
+            ];
+        }
+
+        return LevelDrop::query()->insert($data);
+    }
 }
