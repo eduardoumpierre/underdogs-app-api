@@ -47,6 +47,32 @@ class UserRepository implements UserInterface
     }
 
     /**
+     * @return Collection|static[]
+     */
+    public function findAllOnline()
+    {
+        return User::query()
+            ->from('users AS u')
+            ->select(['u.id', 'u.name', 'u.cpf'])
+            ->where(DB::raw('(SELECT is_active FROM bills WHERE users_id = u.id ORDER BY is_active DESC LIMIT 1)'), '=', true)
+            ->get();
+    }
+
+    /**
+     * @return Model|static
+     */
+    public function findOnlineUsersStats()
+    {
+        $billTotal = DB::raw('(SELECT SUM(p.price) FROM bills_products AS bp JOIN products AS p ON bp.products_id = p.id WHERE bp.bills_id IN (SELECT b.id FROM bills AS b WHERE b.is_active = TRUE)) AS total');
+
+        return User::query()
+            ->from('users AS u')
+            ->select([DB::raw('COUNT(u.id) AS quantity'), $billTotal])
+            ->where(DB::raw('(SELECT is_active FROM bills WHERE users_id = u.id ORDER BY is_active DESC LIMIT 1)'), '=', true)
+            ->firstOrFail();
+    }
+
+    /**
      * @param int $id
      * @param array $columns
      * @return Model

@@ -111,6 +111,9 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
             $router->post('/quick', 'UserController@createQuickUser');
             $router->put('/{id}', 'UserController@update');
             $router->delete('/{id}', 'UserController@delete');
+
+            $router->get('/online', 'UserController@getOnlineUsers');
+            $router->get('/online/stats', 'UserController@getOnlineUsersStats');
         });
     });
 

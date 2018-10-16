@@ -45,6 +45,22 @@ class UserController extends Controller
     }
 
     /**
+     * @return Collection|static[]
+     */
+    public function getOnlineUsers()
+    {
+        return $this->userRepository->findAllOnline();
+    }
+
+    /**
+     * @return Collection|static[]
+     */
+    public function getOnlineUsersStats()
+    {
+        return $this->userRepository->findOnlineUsersStats();
+    }
+
+    /**
      * @param Request $request
      * @return JsonResponse
      * @throws \Illuminate\Validation\ValidationException
