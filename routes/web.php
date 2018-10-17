@@ -99,6 +99,17 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
     });
 
     /**
+     * Achievements
+     */
+    $router->group(['prefix' => 'achievements', 'middleware' => ['auth']], function () use ($router) {
+        $router->get('/', 'AchievementController@getAll');
+        $router->get('/{id}', 'AchievementController@getOne');
+        $router->post('/', 'AchievementController@create');
+        $router->put('/{id}', 'AchievementController@update');
+        $router->delete('/{id}', 'AchievementController@delete');
+    });
+
+    /**
      * Users
      */
     $router->group(['prefix' => 'users'], function () use ($router) {
@@ -107,15 +118,15 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
         $router->get('/ranking', 'UserController@getRanking');
 
         $router->group(['middleware' => ['auth']], function () use ($router) {
+            $router->get('/online', 'UserController@getOnlineUsers');
+            $router->get('/online/stats', 'UserController@getOnlineUsersStats');
+
             $router->get('/', 'UserController@getAll');
             $router->get('/{id}', 'UserController@getOne');
 
             $router->post('/quick', 'UserController@createQuickUser');
             $router->put('/{id}', 'UserController@update');
             $router->delete('/{id}', 'UserController@delete');
-
-            $router->get('/online', 'UserController@getOnlineUsers');
-            $router->get('/online/stats', 'UserController@getOnlineUsersStats');
         });
     });
 
