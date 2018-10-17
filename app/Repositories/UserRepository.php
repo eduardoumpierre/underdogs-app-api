@@ -179,4 +179,17 @@ class UserRepository implements UserInterface
 
         return $currentLevel;
     }
+
+    /**
+     * @return Collection|static[]
+     */
+    public function findRanking()
+    {
+        return User::query()
+            ->select(['username'])
+            ->where('username', '!=', '')
+            ->whereNotNull('username')
+            ->orderByDesc('experience')
+            ->get();
+    }
 }

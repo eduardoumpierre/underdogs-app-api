@@ -53,11 +53,19 @@ class UserController extends Controller
     }
 
     /**
-     * @return Collection|static[]
+     * @return Model|static
      */
     public function getOnlineUsersStats()
     {
         return $this->userRepository->findOnlineUsersStats();
+    }
+
+    /**
+     * @return Collection|static[]
+     */
+    public function getRanking()
+    {
+        return $this->userRepository->findRanking();
     }
 
     /**
