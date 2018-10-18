@@ -10,16 +10,19 @@ use Illuminate\Database\Eloquent\Model;
 class BillRepository implements BillInterface
 {
     private $billProductRepository;
+    private $achievementRepository;
     private $userRepository;
 
     /**
      * BillRepository constructor.
      * @param BillProductRepository $bpr
+     * @param AchievementRepository $ar
      * @param UserRepository $ur
      */
-    public function __construct(BillProductRepository $bpr, UserRepository $ur)
+    public function __construct(BillProductRepository $bpr, AchievementRepository $ar, UserRepository $ur)
     {
         $this->billProductRepository = $bpr;
+        $this->achievementRepository = $ar;
         $this->userRepository = $ur;
     }
 
@@ -150,6 +153,8 @@ class BillRepository implements BillInterface
         foreach ($products as $key => $val) {
             $experience += $val['experience'];
         }
+
+        $experience += $this->achievementRepository->updateAchievementsByUserId($bill->users_id);
 
         return $this->userRepository->addExperience($bill->users_id, $experience);
     }

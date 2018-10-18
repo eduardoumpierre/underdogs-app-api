@@ -9,6 +9,22 @@ use Illuminate\Database\Eloquent\Model;
 
 class AchievementRepository implements AchievementInterface
 {
+    private $userAchievementRepository;
+    private $billProductRepository;
+    private $userDropRepository;
+
+    /**
+     * AchievementRepository constructor.
+     * @param UserAchievementRepository $uar
+     * @param BillProductRepository $bpr
+     */
+    public function __construct(UserAchievementRepository $uar, BillProductRepository $bpr, UserDropRepository $udr)
+    {
+        $this->userAchievementRepository = $uar;
+        $this->billProductRepository = $bpr;
+        $this->userDropRepository = $udr;
+    }
+
     /**
      * @return Collection
      */
@@ -60,4 +76,53 @@ class AchievementRepository implements AchievementInterface
         return null;
     }
 
+    /**
+     * @param int $userId
+     * @return int
+     */
+    public function updateAchievementsByUserId(int $userId)
+    {
+        $experience = 0;
+        $achievements = $this->getAllAchievementsNotCompletedByUserId($userId);
+
+        foreach ($achievements as $key => $val) {
+            $userValue = 0;
+
+            if ($val['category'] === 0) {
+                $userValue = $this->billProductRepository->findAllProductConsumeByProductIdAndUserId($val['entity'], $userId)['count'];
+            } else {
+                // @todo Adicionar conquista de interação
+            }
+
+            if ($userValue >= $val['value']) {
+                $experience += $val['experience'];
+
+                if ($val['drops_id']) {
+                    $this->userDropRepository->insertCustomDrop($userId, $val['drops_id']);
+                }
+
+                $this->userAchievementRepository->create([
+                    'users_id' => $userId,
+                    'achievements_id' => $val['id']
+                ]);
+            }
+        }
+
+        return $experience;
+    }
+
+    /**
+     * @param int $userId
+     * @return Collection|\Illuminate\Support\Collection|static[]
+     */
+    private function getAllAchievementsNotCompletedByUserId(int $userId)
+    {
+        $subQuery = '(SELECT achievements_id FROM users_achievements WHERE users_id = ?)';
+
+        return Achievement::query()
+            ->select(['id', 'experience', 'category', 'entity', 'value', 'drops_id'])
+            ->whereRaw('id NOT IN ' . $subQuery)
+            ->setBindings([$userId])
+            ->get()->toArray();
+    }
 }

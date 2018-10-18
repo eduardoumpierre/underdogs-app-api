@@ -119,4 +119,20 @@ class BillProductRepository implements BillProductInterface
             ->where('bp.bills_id', '=', $id)
             ->get()->toArray()[0];
     }
+
+    /**
+     * @param int $productId
+     * @param int $userId
+     * @return Model|static
+     */
+    public function findAllProductConsumeByProductIdAndUserId(int $productId, int $userId)
+    {
+        return BillProduct::query()
+            ->from('bills_products AS bp')
+            ->select([DB::raw('COUNT(bp.id) AS count')])
+            ->join('bills AS b', 'b.users_id', '=', 'bp.bills_id')
+            ->where('bp.products_id', '=', $productId)
+            ->where('b.users_id', '=', $userId)
+            ->firstOrFail();
+    }
 }

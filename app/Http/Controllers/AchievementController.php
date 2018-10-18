@@ -85,4 +85,9 @@ class AchievementController extends Controller
     {
         return response()->json($this->achievementRepository->delete($id), Response::HTTP_NO_CONTENT);
     }
+
+    public function updateAchievements(int $userId)
+    {
+        $this->achievementRepository->updateAchievementsByUserId($userId);
+    }
 }

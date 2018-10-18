@@ -48,7 +48,22 @@ class UserDropRepository implements UserDropInterface
 
         $userDrop = UserDrop::query()->create([
             'users_id' => $user,
-            'levels_drops_id' => $this->levelDropRepository->findOneRandomByLevelId($level)['id']
+            'drops_id' => $this->levelDropRepository->findOneRandomByLevelId($level)['id']
+        ]);
+
+        return $userDrop;
+    }
+
+    /**
+     * @param int $userId
+     * @param int $dropId
+     * @return Model
+     */
+    public function insertCustomDrop(int $userId, int $dropId): Model
+    {
+        $userDrop = UserDrop::query()->create([
+            'users_id' => $userId,
+            'drops_id' => $dropId
         ]);
 
         return $userDrop;
