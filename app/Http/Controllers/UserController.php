@@ -69,6 +69,15 @@ class UserController extends Controller
     }
 
     /**
+     * @param int $id
+     * @return Collection|static[]
+     */
+    public function getAchievements(int $id)
+    {
+        return $this->userRepository->findAchievementsByUserId($id);
+    }
+
+    /**
      * @param Request $request
      * @return JsonResponse
      * @throws \Illuminate\Validation\ValidationException

@@ -60,4 +60,18 @@ class UserAchievementRepository implements UserAchievementInterface
         return null;
     }
 
+    /**
+     * @param int $id
+     * @return Collection|static[]
+     */
+    public function findAllByUserId(int $id)
+    {
+        return UserAchievement::query()
+            ->from('users_achievements AS ua')
+            ->select(['a.id', 'a.name', 'ua.created_at'])
+            ->join('achievements AS a', 'ua.achievements_id', '=', 'a.id')
+            ->where('users_id', '=', $id)
+            ->orderByDesc('created_at')
+            ->get();
+    }
 }

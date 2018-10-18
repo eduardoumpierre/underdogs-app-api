@@ -28,7 +28,7 @@ class UserAchievement extends Model
      * @var array
      */
     protected $hidden = [
-        'created_at', 'updated_at', 'users_id', 'achievements_id'
+        'updated_at', 'users_id', 'achievements_id'
     ];
 
     /**

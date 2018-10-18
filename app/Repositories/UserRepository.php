@@ -13,16 +13,19 @@ class UserRepository implements UserInterface
 {
     private $levelRepository;
     private $userDropRepository;
+    private $userAchievementsRepository;
 
     /**
      * UserRepository constructor.
      * @param LevelRepository $lr
      * @param UserDropRepository $udr
+     * @param UserAchievementRepository $uar
      */
-    public function __construct(LevelRepository $lr, UserDropRepository $udr)
+    public function __construct(LevelRepository $lr, UserDropRepository $udr, UserAchievementRepository $uar)
     {
         $this->levelRepository = $lr;
         $this->userDropRepository = $udr;
+        $this->userAchievementsRepository = $uar;
     }
 
 
@@ -191,5 +194,14 @@ class UserRepository implements UserInterface
             ->whereNotNull('username')
             ->orderByDesc('experience')
             ->get();
+    }
+
+    /**
+     * @param int $id
+     * @return Collection|static[]
+     */
+    public function findAchievementsByUserId(int $id)
+    {
+        return $this->userAchievementsRepository->findAllByUserId($id);
     }
 }

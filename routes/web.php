@@ -121,6 +121,8 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
             $router->get('/online', 'UserController@getOnlineUsers');
             $router->get('/online/stats', 'UserController@getOnlineUsersStats');
 
+            $router->get('/{id}/achievements', 'UserController@getAchievements');
+
             $router->get('/', 'UserController@getAll');
             $router->get('/{id}', 'UserController@getOne');
 
