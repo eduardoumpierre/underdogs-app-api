@@ -13,19 +13,23 @@ class UserRepository implements UserInterface
 {
     private $levelRepository;
     private $userDropRepository;
-    private $userAchievementsRepository;
+    private $userBadgeRepository;
+    private $userAchievementRepository;
 
     /**
      * UserRepository constructor.
      * @param LevelRepository $lr
      * @param UserDropRepository $udr
      * @param UserAchievementRepository $uar
+     * @param UserBadgeRepository $ubr
      */
-    public function __construct(LevelRepository $lr, UserDropRepository $udr, UserAchievementRepository $uar)
+    public function __construct(LevelRepository $lr, UserDropRepository $udr, UserAchievementRepository $uar,
+                                UserBadgeRepository $ubr)
     {
         $this->levelRepository = $lr;
         $this->userDropRepository = $udr;
-        $this->userAchievementsRepository = $uar;
+        $this->userBadgeRepository = $ubr;
+        $this->userAchievementRepository = $uar;
     }
 
 
@@ -202,6 +206,24 @@ class UserRepository implements UserInterface
      */
     public function findAchievementsByUserId(int $id)
     {
-        return $this->userAchievementsRepository->findAllByUserId($id);
+        return $this->userAchievementRepository->findAllByUserId($id);
+    }
+
+    /**
+     * @param int $id
+     * @return Collection|static[]
+     */
+    public function findDropsByUserId(int $id)
+    {
+        return $this->userDropRepository->findAllByUserId($id);
+    }
+
+    /**
+     * @param int $id
+     * @return Collection|static[]
+     */
+    public function findBadgesByUserId(int $id)
+    {
+        return $this->userBadgeRepository->findAllByUserId($id);
     }
 }

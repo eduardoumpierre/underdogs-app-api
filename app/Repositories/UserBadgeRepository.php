@@ -59,4 +59,17 @@ class UserBadgeRepository implements UserBadgeInterface
         return null;
     }
 
+    /**
+     * @param int $id
+     * @return Collection|static[]
+     */
+    public function findAllByUserId(int $id)
+    {
+        return UserBadge::query()
+            ->from('users_badges AS ub')
+            ->select('b.name')
+            ->join('badges AS b', 'ub.badges_id', '=', 'b.id')
+            ->where('ub.users_id', '=', $id)
+            ->get();
+    }
 }

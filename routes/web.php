@@ -114,13 +114,14 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
      */
     $router->group(['prefix' => 'users'], function () use ($router) {
         $router->post('/', 'UserController@create');
-
         $router->get('/ranking', 'UserController@getRanking');
 
         $router->group(['middleware' => ['auth']], function () use ($router) {
             $router->get('/online', 'UserController@getOnlineUsers');
             $router->get('/online/stats', 'UserController@getOnlineUsersStats');
 
+            $router->get('/{id}/drops', 'UserController@getDrops');
+            $router->get('/{id}/badges', 'UserController@getBadges');
             $router->get('/{id}/achievements', 'UserController@getAchievements');
 
             $router->get('/', 'UserController@getAll');

@@ -94,4 +94,17 @@ class UserDropRepository implements UserDropInterface
         return null;
     }
 
+    /**
+     * @param int $id
+     * @return Collection|static[]
+     */
+    public function findAllByUserId(int $id)
+    {
+        return UserDrop::query()
+            ->from('users_drops AS ud')
+            ->select('d.description')
+            ->join('drops AS d', 'ud.drops_id', '=', 'd.id')
+            ->where('ud.users_id', '=', $id)
+            ->get();
+    }
 }

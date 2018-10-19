@@ -78,6 +78,24 @@ class UserController extends Controller
     }
 
     /**
+     * @param int $id
+     * @return Collection|static[]
+     */
+    public function getDrops(int $id)
+    {
+        return $this->userRepository->findDropsByUserId($id);
+    }
+
+    /**
+     * @param int $id
+     * @return Collection|static[]
+     */
+    public function getBadges(int $id)
+    {
+        return $this->userRepository->findBadgesByUserId($id);
+    }
+
+    /**
      * @param Request $request
      * @return JsonResponse
      * @throws \Illuminate\Validation\ValidationException

@@ -14,7 +14,7 @@ class UserDrop extends Model
      * @var array
      */
     protected $fillable = [
-        'users_id', 'levels_drops_id'
+        'users_id', 'drops_id'
     ];
 
     /**
@@ -43,6 +43,6 @@ class UserDrop extends Model
      */
     public function drop()
     {
-        return $this->hasOne('App\LevelDrop', 'id', 'levels_drops_id');
+        return $this->hasOne('App\LevelDrop', 'id', 'drops_id');
     }
 }
