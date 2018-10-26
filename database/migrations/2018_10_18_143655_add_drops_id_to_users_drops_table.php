@@ -14,6 +14,7 @@ class AddDropsIdToUsersDropsTable extends Migration
     public function up()
     {
         Schema::table('users_drops', function (Blueprint $table) {
+            $table->dropForeign(['levels_drops_id']);
             $table->dropColumn(['levels_drops_id']);
             $table->integer('drops_id')->nullable()->unsigned();
             $table->foreign('drops_id')->references('id')->on('levels_drops');
@@ -28,6 +29,7 @@ class AddDropsIdToUsersDropsTable extends Migration
     public function down()
     {
         Schema::table('users_drops', function (Blueprint $table) {
+            $table->dropForeign(['drops_id']);
             $table->dropColumn(['drops_id']);
             $table->integer('levels_drops_id')->unsigned();
             $table->foreign('levels_drops_id')->references('id')->on('levels_drops');
