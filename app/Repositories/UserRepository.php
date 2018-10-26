@@ -5,6 +5,7 @@ namespace App\Repositories;
 use App\Bill;
 use App\User;
 use App\Interfaces\UserInterface;
+use Dreamonkey\OneSignal\OneSignalClient;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
@@ -148,7 +149,8 @@ class UserRepository implements UserInterface
      *
      * @param int $id
      * @param int $experience
-     * @return Collection|Model
+     * @return Model
+     * @throws \Dreamonkey\OneSignal\OneSignalException
      */
     public function addExperience(int $id, int $experience)
     {
@@ -168,6 +170,7 @@ class UserRepository implements UserInterface
      * @param int $currentExperience
      * @param int $newExperience
      * @return int
+     * @throws \Dreamonkey\OneSignal\OneSignalException
      */
     private function updateUserLevel(int $userId, int $currentLevel, int $currentExperience, int $newExperience)
     {
@@ -180,6 +183,14 @@ class UserRepository implements UserInterface
                 // Adds a new drop from level's drops
                 $this->userDropRepository->create(['user' => $userId, 'level' => $val['number']]);
             }
+
+            $client = new OneSignalClient(env('ONESIGNAL_APP_ID'), env('ONESIGNAL_REST_API_KEY'), env('ONESIGNAL_USER_AUTH_KEY'));
+            $client->postNotification([
+                'tags' => [['key' => 'user_id', 'relation' => '=', 'value' => $userId]],
+                'contents' => ['en' => 'Veja a sua nova recompensa.'],
+                'headings' => ['en' => 'Você subiu de nível!'],
+                'data' => ['level' => $levels->last()->number]
+            ], env('ONESIGNAL_APP_ID'));
 
             return $levels->last()->id;
         }

@@ -100,13 +100,12 @@ $app->register(Dusterio\LumenPassport\PassportServiceProvider::class);
 $LaravelPassportClass = Laravel\Passport\PassportServiceProvider::class;
 $LumenPassportClass = Dusterio\LumenPassport\PassportServiceProvider::class;
 
-if( class_exists( $LaravelPassportClass ) && class_exists( $LumenPassportClass ) ){
-    $app->register( $LaravelPassportClass );
-    $app->register( $LumenPassportClass );
+if (class_exists($LaravelPassportClass) && class_exists($LumenPassportClass)) {
+    $app->register($LaravelPassportClass);
+    $app->register($LumenPassportClass);
 
     // register routes
-    \Dusterio\LumenPassport\LumenPassport::routes( $app );
-
+    \Dusterio\LumenPassport\LumenPassport::routes($app);
 }
 
 $app->configure('cors');
