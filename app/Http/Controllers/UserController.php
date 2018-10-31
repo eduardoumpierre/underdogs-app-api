@@ -96,6 +96,20 @@ class UserController extends Controller
     }
 
     /**
+     * @param int $id
+     * @return array
+     */
+    public function getProfileData(int $id) {
+        $response = [];
+
+        $response['achievements'] = $this->getAchievements($id);
+        $response['badges'] = $this->getBadges($id);
+        $response['drops'] = $this->getDrops($id);
+
+        return $response;
+    }
+
+    /**
      * @param Request $request
      * @return JsonResponse
      * @throws \Illuminate\Validation\ValidationException
