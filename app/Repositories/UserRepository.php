@@ -204,7 +204,7 @@ class UserRepository implements UserInterface
     public function findRanking()
     {
         return User::query()
-            ->select(['username'])
+            ->select(['username', 'experience'])
             ->where('username', '!=', '')
             ->whereNotNull('username')
             ->orderByDesc('experience')
