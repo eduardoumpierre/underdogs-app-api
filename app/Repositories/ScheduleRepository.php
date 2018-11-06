@@ -14,7 +14,7 @@ class ScheduleRepository implements ScheduleInterface
      */
     public function findAll(): Collection
     {
-        return Schedule::query()->get();
+        return Schedule::query()->orderByDesc('date')->get();
     }
 
     /**
