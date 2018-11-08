@@ -110,6 +110,14 @@ class UserController extends Controller
     }
 
     /**
+     * @param int $id
+     * @return Collection|Model|static|static[]
+     */
+    public function getFacebookId(int $id) {
+        return $this->userRepository->findOneByFacebookId($id);
+    }
+
+    /**
      * @param Request $request
      * @return JsonResponse
      * @throws \Illuminate\Validation\ValidationException

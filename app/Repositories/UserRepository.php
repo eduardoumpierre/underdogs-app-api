@@ -237,4 +237,13 @@ class UserRepository implements UserInterface
     {
         return $this->userBadgeRepository->findAllByUserId($id);
     }
+
+    /**
+     * @param $facebookId
+     * @return Collection|Model|static|static[]
+     */
+    public function findOneByFacebookId(int $facebookId)
+    {
+        return User::query()->where('facebook_id', '=', $facebookId)->firstOrFail();
+    }
 }

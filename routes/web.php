@@ -115,6 +115,7 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
     $router->group(['prefix' => 'users'], function () use ($router) {
         $router->post('/', 'UserController@create');
         $router->get('/ranking', 'UserController@getRanking');
+        $router->get('/facebook/{id}', 'UserController@getFacebookId');
 
         $router->group(['middleware' => ['auth']], function () use ($router) {
             $router->get('/online', 'UserController@getOnlineUsers');
