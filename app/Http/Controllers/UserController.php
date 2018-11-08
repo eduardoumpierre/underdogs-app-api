@@ -127,10 +127,11 @@ class UserController extends Controller
     public function createFacebookAccountFirstStep(Request $request): JsonResponse
     {
         $this->validate($request, [
-            'name' => 'required'
+            'name' => 'required',
+            'facebook_id' => 'required:numeric'
         ]);
 
-        return response()->json($this->userRepository->create($request->all()), Response::HTTP_CREATED);
+        return response()->json($this->userRepository->create($request->all(), true), Response::HTTP_CREATED);
     }
 
     /**
