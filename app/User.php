@@ -56,6 +56,6 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      * @return mixed
      */
     public function findForPassport($username){
-        return $user = (new User)->where('email', $username)->orWhere('username', $username)->first();
+        return $user = (new User)->where('email', $username)->orWhere('username', $username)->orWhere('facebook_id', $username)->first();
     }
 }

@@ -99,7 +99,8 @@ class UserController extends Controller
      * @param int $id
      * @return array
      */
-    public function getProfileData(int $id) {
+    public function getProfileData(int $id)
+    {
         $response = [];
 
         $response['achievements'] = $this->getAchievements($id);
@@ -113,8 +114,45 @@ class UserController extends Controller
      * @param int $id
      * @return Collection|Model|static|static[]
      */
-    public function getFacebookId(int $id) {
+    public function getFacebookId(int $id)
+    {
         return $this->userRepository->findOneByFacebookId($id);
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     * @throws \Illuminate\Validation\ValidationException
+     */
+    public function createFacebookAccountFirstStep(Request $request): JsonResponse
+    {
+        $this->validate($request, [
+            'name' => 'required'
+        ]);
+
+        return response()->json($this->userRepository->create($request->all()), Response::HTTP_CREATED);
+    }
+
+    /**
+     * @param Request $request
+     * @param int $id
+     * @return JsonResponse
+     * @throws \Illuminate\Validation\ValidationException
+     */
+    public function createFacebookAccountSecondStep(Request $request, int $id): JsonResponse
+    {
+        $this->validate($request, [
+            'name' => 'required',
+            'username' => 'required|unique:users',
+            'email' => 'required|unique:users',
+            'cpf' => 'required|unique:users',
+            'birthday' => 'required',
+            'role' => 'required|numeric|max:0',
+            'facebook_id' => 'required|numeric',
+            'levels_id' => 'required|numeric|max:1'
+        ]);
+
+        return response()->json($this->userRepository->update($request->all(), $id));
     }
 
     /**

@@ -244,6 +244,6 @@ class UserRepository implements UserInterface
      */
     public function findOneByFacebookId(int $facebookId)
     {
-        return User::query()->where('facebook_id', '=', $facebookId)->firstOrFail();
+        return User::query()->where('facebook_id', '=', $facebookId)->whereNotNull('cpf')->firstOrFail();
     }
 }
