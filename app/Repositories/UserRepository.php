@@ -133,6 +133,19 @@ class UserRepository implements UserInterface
     }
 
     /**
+     * @param array $params
+     * @param int $id
+     * @return Collection|Model
+     */
+    public function updateFacebookUser(array $params, int $id): Model
+    {
+        $params['experience'] = 0;
+        $params['levels_id'] = 1;
+
+        return $this->update($params, $id);
+    }
+
+    /**
      * @param int $id
      * @return null
      * @throws \Exception
