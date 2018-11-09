@@ -142,6 +142,7 @@ class UserRepository implements UserInterface
         $params['role'] = 0;
         $params['experience'] = 0;
         $params['levels_id'] = 1;
+        $params['password'] = app('hash')->make($params['facebook_id']);
 
         return $this->update($params, $id);
     }

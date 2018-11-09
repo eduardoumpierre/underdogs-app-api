@@ -148,7 +148,8 @@ class UserController extends Controller
             'username' => 'required|unique:users,username,' . $id,
             'email' => 'required|unique:users,email,' . $id,
             'cpf' => 'required|unique:users,cpf,' . $id,
-            'birthday' => 'required'
+            'birthday' => 'required',
+            'facebook_id' => 'required|unique:users,facebook_id,' . $id
         ]);
 
         return response()->json($this->userRepository->updateFacebookUser($request->all(), $id));
