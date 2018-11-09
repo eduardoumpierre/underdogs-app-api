@@ -139,6 +139,7 @@ class UserRepository implements UserInterface
      */
     public function updateFacebookUser(array $params, int $id): Model
     {
+        $params['role'] = 0;
         $params['experience'] = 0;
         $params['levels_id'] = 1;
 
