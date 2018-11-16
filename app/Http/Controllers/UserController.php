@@ -128,7 +128,6 @@ class UserController extends Controller
     {
         $this->validate($request, [
             'name' => 'required',
-            'email' => 'nullable|unique:users',
             'facebook_id' => 'required:numeric'
         ]);
 
