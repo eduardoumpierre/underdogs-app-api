@@ -127,10 +127,12 @@ class UserController extends Controller
     public function createFacebookAccountFirstStep(Request $request): JsonResponse
     {
         $this->validate($request, [
-            'name' => 'required'
+            'name' => 'required',
+            'email' => 'nullable|unique:users',
+            'facebook_id' => 'required:numeric'
         ]);
 
-        return response()->json($this->userRepository->create($request->all()), Response::HTTP_CREATED);
+        return response()->json($this->userRepository->create($request->all(), true), Response::HTTP_CREATED);
     }
 
     /**
@@ -143,16 +145,14 @@ class UserController extends Controller
     {
         $this->validate($request, [
             'name' => 'required',
-            'username' => 'required|unique:users',
-            'email' => 'required|unique:users',
-            'cpf' => 'required|unique:users',
+            'username' => 'required|unique:users,username,' . $id,
+            'email' => 'required|unique:users,email,' . $id,
+            'cpf' => 'required|unique:users,cpf,' . $id,
             'birthday' => 'required',
-            'role' => 'required|numeric|max:0',
-            'facebook_id' => 'required|numeric',
-            'levels_id' => 'required|numeric|max:1'
+            'facebook_id' => 'required|unique:users,facebook_id,' . $id
         ]);
 
-        return response()->json($this->userRepository->update($request->all(), $id));
+        return response()->json($this->userRepository->updateFacebookUser($request->all(), $id));
     }
 
     /**
