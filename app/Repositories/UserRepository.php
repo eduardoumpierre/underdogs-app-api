@@ -105,6 +105,17 @@ class UserRepository implements UserInterface
      */
     public function create(array $params, bool $isQuickInsert = false): Model
     {
+        if (isset($params['email']) && !empty($params['email'])) {
+            $user = User::query()->where('email', '=', $params['email'])->first();
+
+            if ($user) {
+                $user->facebook_id = $params['facebook_id'];
+                $user->update();
+
+                return $user;
+            }
+        }
+
         $params['experience'] = 0;
         $params['levels_id'] = 1;
 
