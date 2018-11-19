@@ -90,7 +90,7 @@ class UserRepository implements UserInterface
         return User::query()
             ->from('users AS u')
             ->select([DB::raw('COUNT(u.id) AS quantity'), $billTotal])
-            ->where(DB::raw('(SELECT bp.created_at FROM bills AS b JOIN bills_products bp ON b.id = bp.bills_id WHERE b.users_id = u.id LIMIT 1)'), 'LIKE', date('Y-m-d') . '%')
+            ->where(DB::raw('(SELECT b.created_at FROM bills AS b WHERE b.users_id = u.id ORDER BY b.created_at DESC LIMIT 1)'), 'LIKE', date('Y-m-d') . '%')
             ->firstOrFail();
     }
 
