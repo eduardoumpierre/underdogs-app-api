@@ -71,12 +71,26 @@ class UserRepository implements UserInterface
      */
     public function findOnlineUsersStats()
     {
-        $billTotal = DB::raw('(SELECT SUM(p.price) FROM bills_products AS bp JOIN products AS p ON bp.products_id = p.id WHERE bp.bills_id IN (SELECT b.id FROM bills AS b WHERE b.is_active = TRUE)) AS total');
+        $billTotal = DB::raw('(SELECT COALESCE(SUM(p.price), 0) FROM bills_products AS bp JOIN products AS p ON bp.products_id = p.id WHERE bp.bills_id IN (SELECT b.id FROM bills AS b WHERE b.is_active = TRUE)) AS total');
 
         return User::query()
             ->from('users AS u')
             ->select([DB::raw('COUNT(u.id) AS quantity'), $billTotal])
             ->where(DB::raw('(SELECT is_active FROM bills WHERE users_id = u.id ORDER BY is_active DESC LIMIT 1)'), '=', true)
+            ->firstOrFail();
+    }
+
+    /**
+     * @return Model|static
+     */
+    public function findDailyUsersStats()
+    {
+        $billTotal = DB::raw('(SELECT COALESCE(SUM(p.price), 0) FROM bills_products AS bp JOIN products AS p ON bp.products_id = p.id WHERE bp.created_at LIKE "' . date('Y-m-d') . '%") AS total');
+
+        return User::query()
+            ->from('users AS u')
+            ->select([DB::raw('COUNT(u.id) AS quantity'), $billTotal])
+            ->where(DB::raw('(SELECT bp.created_at FROM bills AS b JOIN bills_products bp ON b.id = bp.bills_id WHERE b.users_id = u.id LIMIT 1)'), 'LIKE', date('Y-m-d') . '%')
             ->firstOrFail();
     }
 

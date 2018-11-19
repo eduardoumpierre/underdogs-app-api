@@ -110,6 +110,13 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
     });
 
     /**
+     * Achievements
+     */
+    $router->group(['prefix' => 'dashboard', 'middleware' => ['auth']], function () use ($router) {
+        $router->get('/', 'DashboardController@getReports');
+    });
+
+    /**
      * Users
      */
     $router->group(['prefix' => 'users'], function () use ($router) {

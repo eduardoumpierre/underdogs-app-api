@@ -135,4 +135,19 @@ class BillProductRepository implements BillProductInterface
             ->where('b.users_id', '=', $userId)
             ->firstOrFail();
     }
+
+    /**
+     * @return Collection|static[]
+     */
+    public function findMostOrderedProducts() {
+        return BillProduct::query()
+            ->from('bills_products AS bp')
+            ->select([DB::raw('COUNT(bp.id) AS count'), 'p.name'])
+            ->join('products AS p', 'bp.products_id', '=', 'p.id')
+            ->where('bp.created_at', 'LIKE', date('Y-m-d') . '%')
+            ->groupBy('bp.products_id')
+            ->orderByDesc('count')
+            ->limit(5)
+            ->get();
+    }
 }
