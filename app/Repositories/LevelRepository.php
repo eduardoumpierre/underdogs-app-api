@@ -59,7 +59,7 @@ class LevelRepository implements LevelInterface
     {
         $level = Level::query()->create($params);
 
-        $this->levelDropRepository->insert($params['drops']);
+        $this->levelDropRepository->insert($params['drops'], $level->id);
 
         return $level;
     }

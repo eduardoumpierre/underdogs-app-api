@@ -93,6 +93,7 @@ class LevelDropRepository implements LevelDropInterface
         if ($id) {
             LevelDrop::query()->where('levels_id', '=', $id)->delete();
         }
+
         $data = [];
 
         foreach ($drops as $key => $val) {
