@@ -29,5 +29,7 @@ class DatabaseSeeder extends Seeder
         $this->call('LevelsDropsTableSeeder');
 
         $this->call('BillsTableSeeder');
+
+        $this->call('AchievementsTableSeeder');
     }
 }

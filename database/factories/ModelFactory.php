@@ -111,3 +111,14 @@ $factory->define(App\Schedule::class, function (Faker\Generator $faker) {
         'date' => $faker->dateTimeBetween('+0 days', '+1 year')
     ];
 });
+
+$factory->define(App\Achievement::class, function (Faker\Generator $faker) {
+    return [
+        'name' => $faker->word,
+        'experience' => $faker->numberBetween(50, 200),
+        'category' => 0,
+        'entity' => DB::table('products')->pluck('id')->random(),
+        'value' => $faker->numberBetween(5, 25),
+        'drops_id' => DB::table('drops')->pluck('id')->random()
+    ];
+});
