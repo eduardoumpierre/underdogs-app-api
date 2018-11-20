@@ -71,7 +71,7 @@ class UserAchievementRepository implements UserAchievementInterface
             ->select(['a.id', 'a.name', 'ua.created_at'])
             ->join('achievements AS a', 'ua.achievements_id', '=', 'a.id')
             ->where('users_id', '=', $id)
-            ->orderByDesc('created_at')
+            ->orderByDesc('ua.created_at')
             ->get();
     }
 }

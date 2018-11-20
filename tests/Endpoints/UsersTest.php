@@ -65,6 +65,48 @@ class UsersTest extends \TestCase
     }
 
     /**
+     * Get one user profile data test
+     */
+    public function testGettingSpecificUserProfileData()
+    {
+        // Request without authentication
+        $this->get(UsersTest::URL . '1/profile');
+        $this->assertResponseStatus(401);
+    }
+
+    /**
+     * Get one user profile data test
+     */
+    public function testGettingOnlineUsers()
+    {
+        // Request without authentication
+        $this->get(UsersTest::URL . 'online');
+        $this->assertResponseStatus(401);
+
+        // Authentication
+        $user = factory(\App\User::class)->create();
+        $this->actingAs($user);
+
+        // Get one user
+        $this->get(UsersTest::URL . 'online')->response->getContent();
+        $this->assertResponseStatus(200);
+
+        $this->seeJsonStructure([
+            '*' => ['id', 'name', 'cpf']
+        ]);
+    }
+
+    /**
+     * Get one user profile data test
+     */
+    public function testGettingOnlineUsersStats()
+    {
+        // Request without authentication
+        $this->get(UsersTest::URL . 'online/stats');
+        $this->assertResponseStatus(401);
+    }
+
+    /**
      * Creating user test
      */
     public function testCreatingUser()
@@ -87,6 +129,27 @@ class UsersTest extends \TestCase
             'username' => 'User',
             'email' => 'user@user.com',
             'experience' => 1000
+        ]);
+        $this->assertResponseStatus(422);
+    }
+
+    /**
+     * Creating quick user test
+     */
+    public function testCreatingQuickUser()
+    {
+        // Request without authentication
+        $this->get(UsersTest::URL . 'quick');
+        $this->assertResponseStatus(401);
+
+        // Authentication
+        $user = factory(\App\User::class)->create();
+        $this->actingAs($user);
+
+        // Invalid request - required fields are missing
+        $this->post(UsersTest::URL . 'quick', [
+            'name' => 'User teste',
+            'email' => 'user_test@user.com'
         ]);
         $this->assertResponseStatus(422);
     }
