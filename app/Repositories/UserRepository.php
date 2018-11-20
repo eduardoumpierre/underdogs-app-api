@@ -247,6 +247,7 @@ class UserRepository implements UserInterface
             ->select(['u.id', 'u.username', 'l.number'])
             ->join('levels AS l', 'l.id', '=', 'u.levels_id')
             ->where('u.username', '!=', '')
+            ->where('u.role', '=', 0)
             ->whereNotNull('u.username')
             ->orderByDesc('u.experience')
             ->get();
