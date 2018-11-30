@@ -104,7 +104,7 @@ class UserDropRepository implements UserDropInterface
             ->from('users_drops AS ud')
             ->select('d.description')
             ->join('levels_drops AS ld', 'ud.drops_id', '=', 'ld.id')
-            ->join('drops AS d', 'ud.drops_id', '=', 'ld.drops_id')
+            ->join('drops AS d', 'ld.drops_id', '=', 'd.id')
             ->where('ud.users_id', '=', $id)
             ->get();
     }
